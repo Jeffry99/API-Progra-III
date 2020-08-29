@@ -56,6 +56,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}") 
+    @ApiOperation(value = "Obtiene un usuario por su id", response = UsuarioDTO.class, tags = "Usuarios")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -94,6 +95,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/cedula/{term}") 
+    @ApiOperation(value = "Obtiene una lista de usuarios por cedula", response = UsuarioDTO.class, responseContainer = "List", tags = "Usuarios")
     public ResponseEntity<?> findByCedulaAproximate(@PathVariable(value = "term") String term) {
         try {
             Optional<List<Usuario>> result = usuarioService.findByCedulaAproximate(term);
@@ -109,6 +111,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/nombre/{term}") 
+    @ApiOperation(value = "Obtiene una lista de usuarios por nombre completo", response = UsuarioDTO.class, responseContainer = "List", tags = "Usuarios")
     public ResponseEntity<?> findByNombreCompletoAproximateIgnoreCase(@PathVariable(value = "term") String term) {
         try {
             Optional<List<Usuario>> result = usuarioService.findByNombreCompletoAproximateIgnoreCase(term);
@@ -125,6 +128,7 @@ public class UsuarioController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/") 
+    @ApiOperation(value = "Crea un usuario", response = UsuarioDTO.class, tags = "Usuarios")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Usuario usuario) {
         try {
@@ -137,6 +141,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}") 
+    @ApiOperation(value = "Modifica un usuario", response = UsuarioDTO.class, tags = "Usuarios")
     @ResponseBody
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Usuario usuarioModified) {
         try {
@@ -155,6 +160,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}") 
+    @ApiOperation(value = "Elimina un usuario", response = HttpStatus.class, tags = "Usuarios")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         //TODO: Implementar este método
         try{
@@ -169,6 +175,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/") 
+    @ApiOperation(value = "Elimina todos los usuarios", response = HttpStatus.class, tags = "Usuarios")
     public ResponseEntity<?> deleteAll() {
  	//TODO: Implementar este método
         try{
