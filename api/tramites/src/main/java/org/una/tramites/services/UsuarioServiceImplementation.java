@@ -49,6 +49,22 @@ public class UsuarioServiceImplementation implements IUsuarioService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<List<Usuario>> findByDepartamentoId(Long id) {
+        return Optional.ofNullable(usuarioRepository.findByDepartamento(id));
+    }
+    
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Usuario> findJefeByDepartamento(Long id) {
+        return Optional.ofNullable(usuarioRepository.findJefeByDepartamento(id));
+    }
+    
+    
+    
+    
+    @Override
     @Transactional
     public Usuario create(Usuario usuario) {
         return usuarioRepository.save(usuario);

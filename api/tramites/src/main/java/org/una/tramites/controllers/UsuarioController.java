@@ -30,9 +30,9 @@ import org.una.tramites.utils.MapperUtils;
  *
  * @author Pablo-VE
  */
- @RestController
-@RequestMapping("/usuarios") 
- @Api(tags = {"Usuarios"})
+@RestController
+@RequestMapping("/usuarios") // 
+@Api(tags = {"Usuarios"})
 public class UsuarioController {
 
     @Autowired
@@ -125,6 +125,45 @@ public class UsuarioController {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @GetMapping("/departamento/{term}") 
+    @ApiOperation(value = "Obtiene una lista de usuarios por departamento", response = UsuarioDTO.class, responseContainer = "List", tags = "Usuarios")
+    public ResponseEntity<?> findByDepartamentoId(@PathVariable(value = "term") Long term) {
+        try {
+            Optional<List<Usuario>> result = usuarioService.findByDepartamentoId(term);
+            if (result.isPresent()) {
+                List<UsuarioDTO> usuariosDTO = MapperUtils.DtoListFromEntityList(result.get(), UsuarioDTO.class);
+                return new ResponseEntity<>(usuariosDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    
+    @GetMapping("/jefedepartamento/{id}") 
+    @ApiOperation(value = "Obtiene un usuario jefe por departamento", response = UsuarioDTO.class, tags = "Usuarios")
+    public ResponseEntity<?> findJefeByDepartamento(@PathVariable(value = "id") Long id) {
+        try {
+
+            Optional<Usuario> usuarioFound = usuarioService.findJefeByDepartamento(id);
+            if (usuarioFound.isPresent()) {
+                UsuarioDTO usuarioDto = MapperUtils.DtoFromEntity(usuarioFound.get(), UsuarioDTO.class);
+                return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    
+    
+    
+    
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/") 
