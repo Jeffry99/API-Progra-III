@@ -38,7 +38,7 @@ public class TransaccionController {
     private ITransaccionService transaccionService;
 
     @GetMapping()
-    @ApiOperation(value = "Obtiene una lista de todos las transacciones", response = TransaccionDTO.class, responseContainer = "List", tags = "Transacciones")
+    @ApiOperation(value = "Obtiene una lista de todas las transacciones", response = TransaccionDTO.class, responseContainer = "List", tags = "Transacciones")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
