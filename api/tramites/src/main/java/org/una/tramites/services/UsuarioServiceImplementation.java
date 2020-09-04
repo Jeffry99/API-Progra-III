@@ -23,7 +23,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.una.tramites.SecurityConfiguration;
+import org.una.tramites.dto.AuthenticationRequest;
 import org.una.tramites.entities.Usuario;
+import org.una.tramites.jwt.JwtProvider;
 
 import org.una.tramites.repositories.IUsuarioRepository;
 
@@ -40,6 +42,12 @@ public class UsuarioServiceImplementation implements IUsuarioService, UserDetail
     
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    
+     @Autowired
+    private JwtProvider jwtProvider;
     
 
 
@@ -123,11 +131,20 @@ public class UsuarioServiceImplementation implements IUsuarioService, UserDetail
         usuarioRepository.deleteAll();
     }
 
+//    @Override
+//    @Transactional(readOnly = true)
+//    public Optional<Usuario> login(Usuario usuario) {
+//        return Optional.ofNullable(usuarioRepository.findByCedulaAndPasswordEncriptado(usuario.getCedula(), usuario.getPasswordEncriptado()));
+//    }
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Usuario> login(Usuario usuario) {
-        return Optional.ofNullable(usuarioRepository.findByCedulaAndPasswordEncriptado(usuario.getCedula(), usuario.getPasswordEncriptado()));
+    public String login(AuthenticationRequest authenticationRequest) {
+
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getCedula(), authenticationRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return jwtProvider.generateToken(authenticationRequest);
+ 
     }
+
 
     @Override
     @Transactional(readOnly = true)
