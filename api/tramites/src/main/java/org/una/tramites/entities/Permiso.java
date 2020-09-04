@@ -5,19 +5,14 @@
  */
 package org.una.tramites.entities;
 
+
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -30,45 +25,28 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
-
 /**
  *
- * @author Pablo-VE
+ * @author Luis
  */
-
-
-
 @Entity
-@Table(name = "usuarios")
+@Table(name = "Permisos")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Usuario implements Serializable {
+public class Permiso implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "nombre_completo", length = 100)
-    private String nombreCompleto;
+    @Column(name = "codigo", length = 10)
+    private String codigo;
 
-    @Column(length = 100, name = "password_encriptado")
-    private String passwordEncriptado;
+    @Column(name = "descripcion", length = 100)
+    private String descripcion;
 
-    @Column(length = 25, unique = true)
-    private String cedula;
-
-    @Column
-    private boolean estado;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario") 
-    private List<PermisoOtorgado> permisosOtorgados= new ArrayList<>();
-    
-//    @Column(name = "departamento_id")
-//    private Long DepartamentoId; 
-    
     @Column(name = "fecha_registro", updatable = false)
     @Temporal(TemporalType.DATE)
     @Setter(AccessLevel.NONE)
@@ -79,19 +57,14 @@ public class Usuario implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date fechaModificacion;
 
-    @Column(name = "es_jefe")
-    private boolean esJefe;
-    
-    @ManyToOne 
-    @JoinColumn(name="departamentos_id")
-    private Departamento departamento;
+    @Column(name = "estado")
+    private boolean estado;
 
     private static final long serialVersionUID = 1L;
-    
+
     @PrePersist
     public void prePersist() {
         estado=true;
-        esJefe=false;
         fechaRegistro = new Date();
         fechaModificacion = new Date();
     }
@@ -101,8 +74,4 @@ public class Usuario implements Serializable {
         fechaModificacion = new Date();
     }
 
-    
-    
 }
-
-
