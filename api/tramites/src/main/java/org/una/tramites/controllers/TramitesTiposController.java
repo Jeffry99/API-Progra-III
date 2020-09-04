@@ -33,14 +33,14 @@ import org.una.tramites.utils.MapperUtils;
  */
 @RestController
 @RequestMapping("/tramites_tipos")
-@Api(tags = {"Tramites"})
+@Api(tags = {"Tramites_Tipos"})
 public class TramitesTiposController {
 
     @Autowired
     private ITramitesTiposService traService;
     
     @GetMapping()
-    @ApiOperation(value = "Obtiene una lista de todos los Tipos de tramites", response = TramitesTiposDTO.class, responseContainer = "List", tags = "Tramites")
+    @ApiOperation(value = "Obtiene una lista de todos los Tipos de tramites", response = TramitesTiposDTO.class, responseContainer = "List", tags = "Tramites_Tipos")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -57,7 +57,7 @@ public class TramitesTiposController {
     }
     
     @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene un tipo de tramite a travez de su identificador unico", response = TramitesTiposDTO.class, tags = "Tramites")
+    @ApiOperation(value = "Obtiene un tipo de tramite a travez de su identificador unico", response = TramitesTiposDTO.class, tags = "Tramites_Tipos")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 

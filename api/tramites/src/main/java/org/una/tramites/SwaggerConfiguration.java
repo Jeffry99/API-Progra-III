@@ -32,12 +32,20 @@ public class SwaggerConfiguration {
                 .apis(
                         RequestHandlerSelectors
                                 .basePackage("org.una.tramites.controllers"))
-                .paths(PathSelectors.any())
+                //.paths(PathSelectors.any())
+                .paths(PathSelectors.regex("/.*"))
                 .build()
                 .apiInfo(apiInfo())
                 .tags(new Tag("Seguridad", "Metodos de Seguridad"),
-                         new Tag("Usuarios", "Entidad de Usuarios"),
-                         new Tag("Departamentos", "Entidad de Departamentos")
+                         new Tag("Usuarios", "Controller de Usuarios"),
+                         new Tag("Departamentos", "Controller de Departamentos"),
+                         new Tag("Permisos", "Controller de Permisos"),
+                         new Tag("Permisos_Otorgados", "Controller de Permisos Otorgados"),
+                         new Tag("Requisitos", "Controller de Requisitos"),
+                         new Tag("Tramites_Tipos", "Controller de Tipos de tramites"),
+                         new Tag("Transacciones", "Controller de Transacciones"),
+                         new Tag("Variaciones", "Controller de Variaciones")
+                        
                 );
 
     }
