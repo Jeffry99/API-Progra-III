@@ -12,7 +12,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.una.tramites.entities.Cliente;
-import org.una.tramites.entities.TramitesTipos;
 
 /**
  *

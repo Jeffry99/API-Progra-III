@@ -53,6 +53,7 @@ public class PermisoController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "Obtiene un permiso por su identificador unico", response = PermisoDTO.class, tags = "Permisos")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
             Optional<Permiso> permisoFound = permisoService.findById(id);
@@ -69,6 +70,7 @@ public class PermisoController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
+    @ApiOperation(value = "Crea un permiso", response = HttpStatus.class, tags = "Permisos")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Permiso per) {
         try {
@@ -81,6 +83,7 @@ public class PermisoController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Modifica un permiso", response = HttpStatus.class, tags = "Permisos")
     @ResponseBody
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Permiso perModified) {
         try {
@@ -97,6 +100,7 @@ public class PermisoController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina un permiso", response = HttpStatus.class, tags = "Permisos")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             permisoService.delete(id);
@@ -110,6 +114,7 @@ public class PermisoController {
     }
 
     @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todos los permisos", response = HttpStatus.class, tags = "Permisos")
     public ResponseEntity<?> deleteAll() {
         try {
             permisoService.deleteAll();

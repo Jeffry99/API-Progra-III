@@ -55,6 +55,7 @@ public class TransaccionController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "Obtiene una transaccion a traves de su identificador unico", response = TransaccionDTO.class, tags = "Transacciones")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
             Optional<Transaccion> transaccionFound = transaccionService.findById(id);
@@ -71,6 +72,7 @@ public class TransaccionController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
+    @ApiOperation(value = "Crea una transaccion", response = HttpStatus.class, tags = "Transacciones")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Transaccion tran) {
         try {
@@ -83,6 +85,7 @@ public class TransaccionController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Modifica una transaccion", response = HttpStatus.class, tags = "Transacciones")
     @ResponseBody
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Transaccion tranModified) {
         try {
@@ -99,6 +102,7 @@ public class TransaccionController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina una transaccion", response = HttpStatus.class, tags = "Transacciones")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             transaccionService.delete(id);
@@ -112,6 +116,7 @@ public class TransaccionController {
     }
 
     @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todas las transacciones", response = HttpStatus.class, tags = "Transacciones")
     public ResponseEntity<?> deleteAll() {
         try {
             transaccionService.deleteAll();

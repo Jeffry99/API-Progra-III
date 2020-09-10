@@ -73,6 +73,7 @@ public class ClienteController {
     }
     
     @GetMapping("/cedula/{term}")
+    @ApiOperation(value = "Obtiene una lista de clientes por cedula", response = ClienteDTO.class, responseContainer = "List", tags = "Clientes")
     public ResponseEntity<?> findByCedulaAproximate(@PathVariable(value = "term") String term) {
         try {
             Optional<List<Cliente>> result = clienteService.findByCedulaAproximate(term);
@@ -88,6 +89,7 @@ public class ClienteController {
     }
     
     @GetMapping("/nombre/{term}")
+    @ApiOperation(value = "Obtiene una lista clientes por nombre completo", response = ClienteDTO.class, responseContainer = "List", tags = "Clientes")
     public ResponseEntity<?> findByNombreCompletoAproximateIgnoreCase(@PathVariable(value = "term") String term) {
         try {
             Optional<List<Cliente>> result = clienteService.findByNombreCompletoAproximateIgnoreCase(term);
@@ -104,6 +106,7 @@ public class ClienteController {
     
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
+    @ApiOperation(value = "Crea un cliente", response = HttpStatus.class, tags = "Clientes")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Cliente cliente) {
         try {
@@ -116,6 +119,7 @@ public class ClienteController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Modifica un cliente", response = HttpStatus.class, tags = "Clientes")
     @ResponseBody
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Cliente clienteModified) {
         try {
@@ -134,6 +138,7 @@ public class ClienteController {
     }
     
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina un cliente", response = HttpStatus.class, tags = "Clientes")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             clienteService.delete(id);
@@ -147,6 +152,7 @@ public class ClienteController {
     }
 
     @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todos los clientes", response = HttpStatus.class, tags = "Clientes")
     public ResponseEntity<?> deleteAll() {
         try {
             clienteService.deleteAll();

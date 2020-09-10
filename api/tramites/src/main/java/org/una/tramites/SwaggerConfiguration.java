@@ -82,12 +82,18 @@ public class SwaggerConfiguration {
                 .tags(new Tag("Seguridad", "Metodos de Seguridad"),
                          new Tag("Usuarios", "Controller de Usuarios"),
                          new Tag("Departamentos", "Controller de Departamentos"),
+                         new Tag("Tramites_Tipos", "Controller de Tipos de tramites"),
+                         new Tag("Variaciones", "Controller de Variaciones"),
+                         new Tag("Archivos_Relacionados", "Controller de Archivos Relacionados"),
+                         new Tag("Clientes", "Controller de Clientes"),
+                         new Tag("Notas", "Controller de Notas"),
                          new Tag("Permisos", "Controller de Permisos"),
                          new Tag("Permisos_Otorgados", "Controller de Permisos Otorgados"),
                          new Tag("Requisitos", "Controller de Requisitos"),
-                         new Tag("Tramites_Tipos", "Controller de Tipos de tramites"),
-                         new Tag("Transacciones", "Controller de Transacciones"),
-                         new Tag("Variaciones", "Controller de Variaciones")
+                         new Tag("Requisitos_Presentados", "Controller de Requisitos Presentados"),
+                         new Tag("Tramites_Cambio_Estado", "Controller de Tramite Cambio Estado"),
+                         new Tag("Tramites_Registrados", "Controller de Tramites Registrados"),
+                         new Tag("Transacciones", "Controller de Transacciones")
                 );
 
     }

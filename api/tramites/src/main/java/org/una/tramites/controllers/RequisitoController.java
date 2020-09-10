@@ -40,103 +40,108 @@ public class RequisitoController {
     private IRequisitoService reqService;
  
     @GetMapping()
-        @ApiOperation(value = "Obtiene una lista de todos los Requisitos", response = RequisitoDTO.class, responseContainer = "List", tags = "Requisitos")
-        public @ResponseBody ResponseEntity<?> findAll(){
-            try{
-                Optional<List<Requisito>> result = reqService.findAll();
-                if(result.isPresent()){
-                    List<RequisitoDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitoDTO.class);
-                    return new ResponseEntity<>(resultDTO, HttpStatus.OK);
-                }
+    @ApiOperation(value = "Obtiene una lista de todos los Requisitos", response = RequisitoDTO.class, responseContainer = "List", tags = "Requisitos")
+    public @ResponseBody ResponseEntity<?> findAll(){
+        try{
+            Optional<List<Requisito>> result = reqService.findAll();
+            if(result.isPresent()){
+                List<RequisitoDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitoDTO.class);
+                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch(Exception ex){
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Obtiene un requisito a travez de su identificador unico", response = RequisitoDTO.class, tags = "Requisitos")
+    public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
+        try {
+
+            Optional<Requisito> variacionFound = reqService.findById(id);
+            if (variacionFound.isPresent()) {
+                RequisitoDTO variacionDto = MapperUtils.DtoFromEntity(variacionFound.get(), RequisitoDTO.class);
+                return new ResponseEntity<>(variacionDto, HttpStatus.OK);
+            } else {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }catch(Exception ex){
-                return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
             }
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
-        @GetMapping("/{id}")
-        @ApiOperation(value = "Obtiene un requisito a travez de su identificador unico", response = RequisitoDTO.class, tags = "Requisitos")
-        public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
-            try {
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/")
+    @ApiOperation(value = "Crea un requisito", response = HttpStatus.class, tags = "Requisitos")
+    @ResponseBody
+    public ResponseEntity<?> create(@RequestBody Requisito variacion) {
+        try {
+            Requisito varCreated = reqService.create(variacion);
+            RequisitoDTO varDto = MapperUtils.DtoFromEntity(varCreated, RequisitoDTO.class);
+            return new ResponseEntity<>(varDto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-                Optional<Requisito> variacionFound = reqService.findById(id);
-                if (variacionFound.isPresent()) {
-                    RequisitoDTO variacionDto = MapperUtils.DtoFromEntity(variacionFound.get(), RequisitoDTO.class);
-                    return new ResponseEntity<>(variacionDto, HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-                }
-            } catch (Exception ex) {
-                return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Modifica un requisito", response = HttpStatus.class, tags = "Requisitos")
+    @ResponseBody
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Requisito varModified) {
+        try {
+            Optional<Requisito> varUpdated = reqService.update(varModified, id);
+            if (varUpdated.isPresent()) {
+                RequisitoDTO usuarioDto = MapperUtils.DtoFromEntity(varUpdated.get(), RequisitoDTO.class);
+                return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
             }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
-        @ResponseStatus(HttpStatus.OK)
-        @PostMapping("/")
-        @ResponseBody
-        public ResponseEntity<?> create(@RequestBody Requisito variacion) {
-            try {
-                Requisito varCreated = reqService.create(variacion);
-                RequisitoDTO varDto = MapperUtils.DtoFromEntity(varCreated, RequisitoDTO.class);
-                return new ResponseEntity<>(varDto, HttpStatus.CREATED);
-            } catch (Exception e) {
-                return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina un requisito", response = HttpStatus.class, tags = "Requisitos")
+    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
+        try {
+            reqService.delete(id);
+            if (findById(id).getStatusCode() == HttpStatus.NO_CONTENT) {
+                return new ResponseEntity<>(HttpStatus.OK);
             }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
-        @PutMapping("/{id}")
-        @ResponseBody
-        public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Requisito varModified) {
-            try {
-                Optional<Requisito> varUpdated = reqService.update(varModified, id);
-                if (varUpdated.isPresent()) {
-                    RequisitoDTO usuarioDto = MapperUtils.DtoFromEntity(varUpdated.get(), RequisitoDTO.class);
-                    return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
-                }
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            } catch (Exception e) {
-                return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todos los requisitos", response = HttpStatus.class, tags = "Requisitos")
+    public ResponseEntity<?> deleteAll() {
+        try {
+            reqService.deleteAll();
+            if (findAll().getStatusCode() == HttpStatus.NO_CONTENT) {
+                return new ResponseEntity<>(HttpStatus.OK);
             }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
-        @DeleteMapping("/{id}")
-        public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
-            try {
-                reqService.delete(id);
-                if (findById(id).getStatusCode() == HttpStatus.NO_CONTENT) {
-                    return new ResponseEntity<>(HttpStatus.OK);
-                }
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            } catch (Exception ex) {
-                return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+    @GetMapping("/descripcion")
+    @ApiOperation(value = "Obtiene una lista de requisitos por su descripcion", response = RequisitoDTO.class, responseContainer = "List", tags = "Requisitos")
+    public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion")String descripcion){
+        try{
+            Optional<List<Requisito>> result = reqService.findByDescripcion(descripcion);
+            if(result.isPresent()){
+                List<RequisitoDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitoDTO.class);
+                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
             }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch(Exception ex){
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        @DeleteMapping("/")
-        public ResponseEntity<?> deleteAll() {
-            try {
-                reqService.deleteAll();
-                if (findAll().getStatusCode() == HttpStatus.NO_CONTENT) {
-                    return new ResponseEntity<>(HttpStatus.OK);
-                }
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            } catch (Exception ex) {
-                return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        @GetMapping("/descripcion")
-        public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion")String descripcion){
-            try{
-                Optional<List<Requisito>> result = reqService.findByDescripcion(descripcion);
-                if(result.isPresent()){
-                    List<RequisitoDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitoDTO.class);
-                    return new ResponseEntity<>(resultDTO, HttpStatus.OK);
-                }
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }catch(Exception ex){
-                return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
+    }
 }
 

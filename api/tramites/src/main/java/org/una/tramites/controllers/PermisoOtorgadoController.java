@@ -57,6 +57,7 @@ public class PermisoOtorgadoController {
     }
 
     @GetMapping("/{id}")
+    @ApiOperation(value = "Obtiene un permiso otorgado a traves de su identificador unico", response = PermisoOtorgadoDTO.class, tags = "Permisos_Otorgados")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
             Optional<PermisoOtorgado> perOtorgadoFound = perOtorgadoService.findById(id);
@@ -73,6 +74,7 @@ public class PermisoOtorgadoController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
+    @ApiOperation(value = "Crea un permiso otorgado", response = HttpStatus.class, tags = "Permisos_Otorgados")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody PermisoOtorgado perOto) {
         try {
@@ -85,6 +87,7 @@ public class PermisoOtorgadoController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Modifica un permiso otorgado", response = HttpStatus.class, tags = "Permisos_Otorgados")
     @ResponseBody
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody PermisoOtorgado perOtorgadoModified) {
         try {
@@ -101,6 +104,7 @@ public class PermisoOtorgadoController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina un permiso otorgado", response = HttpStatus.class, tags = "Permisos_Otorgados")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             perOtorgadoService.delete(id);
@@ -114,6 +118,7 @@ public class PermisoOtorgadoController {
     }
 
     @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todos los permisos otorgados", response = HttpStatus.class, tags = "Permisos_Otorgados")
     public ResponseEntity<?> deleteAll() {
         try {
             perOtorgadoService.deleteAll();

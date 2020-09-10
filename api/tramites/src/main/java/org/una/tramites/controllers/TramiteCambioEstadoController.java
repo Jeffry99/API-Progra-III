@@ -75,6 +75,7 @@ public class TramiteCambioEstadoController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
+    @ApiOperation(value = "Crea un tramite cambio estado", response = HttpStatus.class, tags = "Tramites_Cambio_Estado")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody TramiteCambioEstado tramites) {
         try {
@@ -87,6 +88,7 @@ public class TramiteCambioEstadoController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Modifica un tramite cambio estado", response = HttpStatus.class, tags = "Tramites_Cambio_Estado")
     @ResponseBody
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody TramiteCambioEstado tramitesModified) {
         try {
@@ -105,6 +107,7 @@ public class TramiteCambioEstadoController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina un tramite cambio estado", response = HttpStatus.class, tags = "Tramites_Cambio_Estado")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             tramiteService.delete(id);
@@ -118,6 +121,7 @@ public class TramiteCambioEstadoController {
     }
 
     @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todos los tramites cambio estados", response = HttpStatus.class, tags = "Tramites_Cambio_Estado")
     public ResponseEntity<?> deleteAll() {
         try {
             tramiteService.deleteAll();

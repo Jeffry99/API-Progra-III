@@ -57,7 +57,7 @@ public class TramiteRegistradoController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene un tramite registrado a travez de su identificador unico", response = TramiteRegistradoDTO.class, tags = "Tramites_Registrados")
+    @ApiOperation(value = "Obtiene un tramite registrado a traves de su identificador unico", response = TramiteRegistradoDTO.class, tags = "Tramites_Registrados")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -75,6 +75,7 @@ public class TramiteRegistradoController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
+    @ApiOperation(value = "Crea un tramite registrado", response = HttpStatus.class, tags = "Tramites_Registrados")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody TramiteRegistrado tramites) {
         try {
@@ -87,6 +88,7 @@ public class TramiteRegistradoController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Modifica un tramite registrado", response = HttpStatus.class, tags = "Tramites_Registrados")
     @ResponseBody
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody TramiteRegistrado tramitesModified) {
         try {
@@ -105,6 +107,7 @@ public class TramiteRegistradoController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina un tramite registrado", response = HttpStatus.class, tags = "Tramites_Registrados")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             tramitesRegistradosService.delete(id);
@@ -118,6 +121,7 @@ public class TramiteRegistradoController {
     }
 
     @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todos los tramites registrados", response = HttpStatus.class, tags = "Tramites_Registrados")
     public ResponseEntity<?> deleteAll() {
         try {
             tramitesRegistradosService.deleteAll();

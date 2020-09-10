@@ -39,6 +39,7 @@ public class RequisitoPresentadoController {
     IRequisitoPresentadoService requisitoPresentadoService;
     
     @GetMapping("/{id}")
+    @ApiOperation(value = "Obtiene un requisito presentado a traves de su identificador unico", response = RequisitoPresentadoDTO.class, tags = "Requisitos_Presentados")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
             Optional<RequisitoPresentado> repPresentadoFound = requisitoPresentadoService.findById(id);
@@ -87,6 +88,7 @@ public class RequisitoPresentadoController {
     
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
+    @ApiOperation(value = "Crea un requisito presentado", response = HttpStatus.class, tags = "Requisitos_Presentados")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody RequisitoPresentado reqPresentado) {
         try {
@@ -99,6 +101,7 @@ public class RequisitoPresentadoController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Modifica un requisito presentado", response = HttpStatus.class, tags = "Requisitos_Presentados")
     @ResponseBody
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody RequisitoPresentado reqPresentadoModified) {
         try {
@@ -115,6 +118,7 @@ public class RequisitoPresentadoController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina un requisito presentado", response = HttpStatus.class, tags = "Requisitos_Presentados")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             requisitoPresentadoService.delete(id);
@@ -128,6 +132,7 @@ public class RequisitoPresentadoController {
     }
 
     @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todos los requisitos presentados", response = HttpStatus.class, tags = "Requisitos_Presentados")
     public ResponseEntity<?> deleteAll() {
         try {
             requisitoPresentadoService.deleteAll();

@@ -74,6 +74,7 @@ public class NotaController {
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
+    @ApiOperation(value = "Crea una nota", response = HttpStatus.class, tags = "Notas")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Nota notas) {
         try {
@@ -86,6 +87,7 @@ public class NotaController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Modifica una nota", response = HttpStatus.class, tags = "Notas")
     @ResponseBody
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Nota notasModified) {
         try {
@@ -101,6 +103,7 @@ public class NotaController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina una nota", response = HttpStatus.class, tags = "Notas")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             notasService.delete(id);
@@ -114,6 +117,7 @@ public class NotaController {
     }
 
     @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todas las notas", response = HttpStatus.class, tags = "Notas")
     public ResponseEntity<?> deleteAll() {
         try {
             notasService.deleteAll();

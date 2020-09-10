@@ -73,6 +73,7 @@ public class VariacionController {
     
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
+    @ApiOperation(value = "Crea una variacion", response = HttpStatus.class, tags = "Variaciones")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody Variacion variacion) {
         try {
@@ -85,6 +86,7 @@ public class VariacionController {
     }
 
     @PutMapping("/{id}")
+    @ApiOperation(value = "Modifica una variacion", response = HttpStatus.class, tags = "Variaciones")
     @ResponseBody
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Variacion varModified) {
         try {
@@ -100,6 +102,7 @@ public class VariacionController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina una variacion", response = HttpStatus.class, tags = "Variaciones")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             varService.delete(id);
@@ -113,6 +116,7 @@ public class VariacionController {
     }
 
     @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todas las variaciones", response = HttpStatus.class, tags = "Variaciones")
     public ResponseEntity<?> deleteAll() {
         try {
             varService.deleteAll();

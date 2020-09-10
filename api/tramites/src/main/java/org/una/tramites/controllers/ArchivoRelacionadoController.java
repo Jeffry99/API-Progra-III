@@ -41,6 +41,7 @@ public class ArchivoRelacionadoController {
     private IArchivoRelacionadoService archivoRelacionadoService;
     
     @GetMapping("/{id}")
+    @ApiOperation(value = "Obtiene un archivos relacionado por su id", response = ArchivoRelacionadoDTO.class, tags = "Archivos_Relacionados")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
             Optional<ArchivoRelacionado> arcRelacionadoFound = archivoRelacionadoService.findById(id);
@@ -88,7 +89,7 @@ public class ArchivoRelacionadoController {
     }
     
     @GetMapping("/{fechaRegistro}")
-    @ApiOperation(value = "Obtiene los archivos relacionados al tramite registrado", response = ArchivoRelacionadoDTO.class, responseContainer = "List", tags = "Archivos_Relacionados")
+    @ApiOperation(value = "Obtiene una lista de archivos relacionados por fecha de registro", response = ArchivoRelacionadoDTO.class, responseContainer = "List",tags = "Archivos_Relacionados")
     public ResponseEntity<?> findByFechaRegistro(@PathVariable(value = "fechaRegistro")Date  fechaRegistro) {
         try{
             Optional<List<ArchivoRelacionado>> result = archivoRelacionadoService.findByFechaRegistro(fechaRegistro);
@@ -104,6 +105,7 @@ public class ArchivoRelacionadoController {
     
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
+    @ApiOperation(value = "Crea un archivo relacionado", response = HttpStatus.class,tags = "Archivos_Relacionados")
     @ResponseBody
     public ResponseEntity<?> create(@RequestBody ArchivoRelacionado arcRelacionado) {
         try {
@@ -116,7 +118,7 @@ public class ArchivoRelacionadoController {
     }
 
     @PutMapping("/{id}")
-    @ResponseBody
+    @ApiOperation(value = "Modifica un archivo relacionado", response = HttpStatus.class,tags = "Archivos_Relacionados")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody ArchivoRelacionado arcRelacionadoModified) {
         try {
             Optional<ArchivoRelacionado> arcRelacionadoUpdated = archivoRelacionadoService.update(arcRelacionadoModified, id);
@@ -132,6 +134,7 @@ public class ArchivoRelacionadoController {
     }
 
     @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina un archivo relacionado", response = HttpStatus.class,tags = "Archivos_Relacionados")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             archivoRelacionadoService.delete(id);
@@ -145,6 +148,7 @@ public class ArchivoRelacionadoController {
     }
 
     @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todos los archivos relacionados", response = HttpStatus.class,tags = "Archivos_Relacionados")
     public ResponseEntity<?> deleteAll() {
         try {
             archivoRelacionadoService.deleteAll();
