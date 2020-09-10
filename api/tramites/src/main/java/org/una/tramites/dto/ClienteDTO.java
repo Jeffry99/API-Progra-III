@@ -15,21 +15,20 @@ import lombok.ToString;
 
 /**
  *
- * @author Jeffry
+ * @author Pablo-VE
  */
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor 
 @ToString
-public class TramitesTiposDTO {
-
-    private Long id;
-    private String descripcion;
-    private boolean estado;
-    private DepartamentoDTO departamento;
-    private Date fechaRegistro;
-    private Date fechaModificacion;
-    private List<VariacionesDTO> variaciones = new ArrayList<>();
-    
+public class ClienteDTO {
+    private Long id; 
+    private String nombreCompleto;   
+    private String cedula; 
+    private String telefono;
+    private String direccion;
+    private boolean estado; 
+    private Date fechaRegistro; 
+    private Date fechaModificacion; 
+    private String passwordEncriptado;
 }

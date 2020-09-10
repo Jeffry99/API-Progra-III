@@ -15,25 +15,18 @@ import lombok.ToString;
  *
  * @author Pablo-VE
  */
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor 
 @ToString
-public class UsuarioDTO {
- 
-    private Long id; 
-    private String nombreCompleto;   
-    private String cedula; 
-    private boolean estado; 
-    private Date fechaRegistro; 
-    private Date fechaModificacion; 
-    private boolean esJefe;
-    private Long departamentosId;
+public class NotaDTO {
+    private Long id;
+    private boolean estado;
+    private boolean tipo;
+    private String titulo;
+    private String contenido;
+    private Date fechaRegistro;
+    private Date fechaModificacion;
+    private TramiteRegistradoDTO tramitesRegistrados;
     
-    
-   
-     
 }
-
-

@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.una.tramites.dto.RequisitosDTO;
-import org.una.tramites.entities.Requisitos;
-import org.una.tramites.services.IRequisitosService;
+import org.una.tramites.dto.RequisitoDTO;
+import org.una.tramites.entities.Requisito;
 import org.una.tramites.utils.MapperUtils;
+import org.una.tramites.services.IRequisitoService;
 
 /**
  *
@@ -34,18 +34,18 @@ import org.una.tramites.utils.MapperUtils;
 @RestController
 @RequestMapping("/requisitos")
 @Api(tags = {"Requisitos"})
-public class RequisitosController {
+public class RequisitoController {
 
     @Autowired
-    private IRequisitosService reqService;
+    private IRequisitoService reqService;
  
     @GetMapping()
-        @ApiOperation(value = "Obtiene una lista de todos los Requisitos", response = RequisitosDTO.class, responseContainer = "List", tags = "Requisitos")
+        @ApiOperation(value = "Obtiene una lista de todos los Requisitos", response = RequisitoDTO.class, responseContainer = "List", tags = "Requisitos")
         public @ResponseBody ResponseEntity<?> findAll(){
             try{
-                Optional<List<Requisitos>> result = reqService.findAll();
+                Optional<List<Requisito>> result = reqService.findAll();
                 if(result.isPresent()){
-                    List<RequisitosDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitosDTO.class);
+                    List<RequisitoDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitoDTO.class);
                     return new ResponseEntity<>(resultDTO, HttpStatus.OK);
                 }
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -55,13 +55,13 @@ public class RequisitosController {
         }
 
         @GetMapping("/{id}")
-        @ApiOperation(value = "Obtiene un requisito a travez de su identificador unico", response = RequisitosDTO.class, tags = "Requisitos")
+        @ApiOperation(value = "Obtiene un requisito a travez de su identificador unico", response = RequisitoDTO.class, tags = "Requisitos")
         public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
             try {
 
-                Optional<Requisitos> variacionFound = reqService.findById(id);
+                Optional<Requisito> variacionFound = reqService.findById(id);
                 if (variacionFound.isPresent()) {
-                    RequisitosDTO variacionDto = MapperUtils.DtoFromEntity(variacionFound.get(), RequisitosDTO.class);
+                    RequisitoDTO variacionDto = MapperUtils.DtoFromEntity(variacionFound.get(), RequisitoDTO.class);
                     return new ResponseEntity<>(variacionDto, HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -74,10 +74,10 @@ public class RequisitosController {
         @ResponseStatus(HttpStatus.OK)
         @PostMapping("/")
         @ResponseBody
-        public ResponseEntity<?> create(@RequestBody Requisitos variacion) {
+        public ResponseEntity<?> create(@RequestBody Requisito variacion) {
             try {
-                Requisitos varCreated = reqService.create(variacion);
-                RequisitosDTO varDto = MapperUtils.DtoFromEntity(varCreated, RequisitosDTO.class);
+                Requisito varCreated = reqService.create(variacion);
+                RequisitoDTO varDto = MapperUtils.DtoFromEntity(varCreated, RequisitoDTO.class);
                 return new ResponseEntity<>(varDto, HttpStatus.CREATED);
             } catch (Exception e) {
                 return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -86,11 +86,11 @@ public class RequisitosController {
 
         @PutMapping("/{id}")
         @ResponseBody
-        public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Requisitos varModified) {
+        public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Requisito varModified) {
             try {
-                Optional<Requisitos> varUpdated = reqService.update(varModified, id);
+                Optional<Requisito> varUpdated = reqService.update(varModified, id);
                 if (varUpdated.isPresent()) {
-                    RequisitosDTO usuarioDto = MapperUtils.DtoFromEntity(varUpdated.get(), RequisitosDTO.class);
+                    RequisitoDTO usuarioDto = MapperUtils.DtoFromEntity(varUpdated.get(), RequisitoDTO.class);
                     return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
                 }
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -128,9 +128,9 @@ public class RequisitosController {
         @GetMapping("/descripcion")
         public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion")String descripcion){
             try{
-                Optional<List<Requisitos>> result = reqService.findByDescripcion(descripcion);
+                Optional<List<Requisito>> result = reqService.findByDescripcion(descripcion);
                 if(result.isPresent()){
-                    List<RequisitosDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitosDTO.class);
+                    List<RequisitoDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitoDTO.class);
                     return new ResponseEntity<>(resultDTO, HttpStatus.OK);
                 }
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);

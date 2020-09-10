@@ -17,17 +17,19 @@ import lombok.ToString;
  *
  * @author Jeffry
  */
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor 
 @ToString
-public class RequisitosDTO {
+public class TramiteTipoDTO {
 
     private Long id;
     private String descripcion;
     private boolean estado;
+    private DepartamentoDTO departamento;
     private Date fechaRegistro;
-    private VariacionesDTO variaciones;
-    //private List<RequisitoPresentadoDTO> requisitosPresentados = new ArrayList<>();
+    private Date fechaModificacion;
+    private List<VariacionDTO> variaciones = new ArrayList<>();
+    
 }
-

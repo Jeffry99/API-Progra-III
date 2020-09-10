@@ -19,7 +19,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,79 +29,46 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
-
 /**
  *
- * @author Pablo-VE
+ * @author Jeffry
  */
-
-
-
 @Entity
-@Table(name = "usuarios")
+@Table(name = "requisitos")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Usuario implements Serializable {
+public class Requisito implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "nombre_completo", length = 100)
-    private String nombreCompleto;
-
-    @Column(length = 100, name = "password_encriptado")
-    private String passwordEncriptado;
-
-    @Column(length = 25, unique = true)
-    private String cedula;
-
+    
+    @Column
+    private String descripcion;
+    
     @Column
     private boolean estado;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario") 
-    private List<PermisoOtorgado> permisosOtorgados= new ArrayList<>();
-    
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario") 
-    private List<TramiteCambioEstado> tramiteCambioEstado= new ArrayList<>();
     
     @Column(name = "fecha_registro", updatable = false)
     @Temporal(TemporalType.DATE)
     @Setter(AccessLevel.NONE)
     private Date fechaRegistro;
-
-    @Column(name = "fecha_modificacion")
-    @Setter(AccessLevel.NONE)
-    @Temporal(TemporalType.DATE)
-    private Date fechaModificacion;
-
-    @Column(name = "es_jefe")
-    private boolean esJefe;
     
     @ManyToOne 
-    @JoinColumn(name="departamentos_id")
-    private Departamento departamento;
-
-    private static final long serialVersionUID = 1L;
+    @JoinColumn(name="variaciones_id")
+    private Variacion variaciones;
+    
+    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "Requisitos") 
+    //private List<RequisitoPresentado> requisitosPresentados = new ArrayList<>();
     
     @PrePersist
     public void prePersist() {
         estado=true;
-        esJefe=false;
         fechaRegistro = new Date();
-        fechaModificacion = new Date();
     }
-
-    @PreUpdate
-    public void preUpdate() {
-        fechaModificacion = new Date();
-    }
-
-    
-    
 }
-
 

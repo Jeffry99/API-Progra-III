@@ -34,12 +34,12 @@ import lombok.ToString;
  * @author Jeffry
  */
 @Entity
-@Table(name = "Variaciones")
+@Table(name = "variaciones")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Variaciones implements Serializable {
+public class Variacion implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
@@ -63,10 +63,10 @@ public class Variaciones implements Serializable {
     
     @ManyToOne 
     @JoinColumn(name="tramites_tipos_id")
-    private TramitesTipos tramites;
+    private TramiteTipo tramitesTipos;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "variaciones") 
-    private List<Requisitos> requisitos = new ArrayList<>();
+    private List<Requisito> requisitos = new ArrayList<>();
     
     @PrePersist
     public void prePersist() {

@@ -32,7 +32,7 @@ import lombok.ToString;
  */
 
 @Entity
-@Table(name = "Permisos_Otorgados")
+@Table(name = "permisos_otorgados")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

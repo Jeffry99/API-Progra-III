@@ -35,7 +35,7 @@ import lombok.ToString;
  * @author Jeffry
  */
 @Entity
-@Table(name = "Tramites_Tipos")
+@Table(name = "tramites_tipos")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

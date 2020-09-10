@@ -6,10 +6,7 @@
 package org.una.tramites.entities;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -17,9 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,79 +24,46 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
-
 /**
  *
  * @author Pablo-VE
  */
-
-
-
 @Entity
-@Table(name = "usuarios")
+@Table(name = "archivos_relacionados")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class Usuario implements Serializable {
-
+public class ArchivoRelacionado implements Serializable{
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "nombre_completo", length = 100)
-    private String nombreCompleto;
-
-    @Column(length = 100, name = "password_encriptado")
-    private String passwordEncriptado;
-
-    @Column(length = 25, unique = true)
-    private String cedula;
-
+    
+    @ManyToOne 
+    @JoinColumn(name="tramites_registrados_id")
+    private TramiteRegistrado tramitesRegistrados;
+    
+    
+    @Column(name = "nombre", length = 100)
+    private String nombre;
+    
     @Column
     private boolean estado;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario") 
-    private List<PermisoOtorgado> permisosOtorgados= new ArrayList<>();
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "usuario") 
-    private List<TramiteCambioEstado> tramiteCambioEstado= new ArrayList<>();
+    @Column(name = "ruta_archivo")
+    private String rutaArchivo;
     
     @Column(name = "fecha_registro", updatable = false)
     @Temporal(TemporalType.DATE)
     @Setter(AccessLevel.NONE)
     private Date fechaRegistro;
-
+    
+    @Column(name = "etiquetas")
+    private String etiqueta;
+    
     @Column(name = "fecha_modificacion")
     @Setter(AccessLevel.NONE)
     @Temporal(TemporalType.DATE)
     private Date fechaModificacion;
-
-    @Column(name = "es_jefe")
-    private boolean esJefe;
-    
-    @ManyToOne 
-    @JoinColumn(name="departamentos_id")
-    private Departamento departamento;
-
-    private static final long serialVersionUID = 1L;
-    
-    @PrePersist
-    public void prePersist() {
-        estado=true;
-        esJefe=false;
-        fechaRegistro = new Date();
-        fechaModificacion = new Date();
-    }
-
-    @PreUpdate
-    public void preUpdate() {
-        fechaModificacion = new Date();
-    }
-
-    
-    
 }
-
-

@@ -7,13 +7,15 @@ package org.una.tramites.repositories;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.una.tramites.entities.Requisitos;
+import org.una.tramites.entities.TramiteRegistrado;
 
 /**
  *
- * @author Jeffry
+ * @author Pablo-VE
  */
-public interface IRequisitosRepository extends JpaRepository<Requisitos, Long>{
+public interface ITramiteRegistradoRepository extends JpaRepository<TramiteRegistrado, Long> {
+  //  public List<TramiteRegistrado> findByClientesId(Long id);
     
-    public List<Requisitos> findByDescripcion(String descripcion);
+ //   public List<TramiteRegistrado> findByTramitesTiposId(Long id);
+    
 }

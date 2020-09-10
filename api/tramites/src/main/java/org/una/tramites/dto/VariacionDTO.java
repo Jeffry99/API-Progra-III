@@ -21,7 +21,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor 
 @ToString
-public class VariacionesDTO {
+public class VariacionDTO {
     
     
     private Long id;
@@ -29,6 +29,6 @@ public class VariacionesDTO {
     private String descripcion;
     private boolean estado;
     private Date fechaRegistro;
-    private TramitesTiposDTO tramites; 
-    private List<RequisitosDTO> requisitos = new ArrayList<>();
+    private TramiteTipoDTO tramites; 
+    private List<RequisitoDTO> requisitos = new ArrayList<>();
 }

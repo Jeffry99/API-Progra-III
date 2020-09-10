@@ -9,36 +9,36 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.una.tramites.entities.Requisitos;
-import org.una.tramites.repositories.IRequisitosRepository;
+import org.una.tramites.entities.Requisito;
+import org.una.tramites.repositories.IRequisitoRepository;
 
 /**
  *
  * @author Jeffry
  */
 @Service
-public class RequisitosServiceImplementation implements IRequisitosService{
+public class RequisitoServiceImplementation implements IRequisitoService{
 
     @Autowired
-    private IRequisitosRepository reqRepo;
+    private IRequisitoRepository reqRepo;
     
     @Override
-    public Optional<List<Requisitos>> findAll() {
+    public Optional<List<Requisito>> findAll() {
         return Optional.ofNullable(reqRepo.findAll());
     }
 
     @Override
-    public Optional<Requisitos> findById(Long id) {
+    public Optional<Requisito> findById(Long id) {
         return reqRepo.findById(id);
     }
 
     @Override
-    public Requisitos create(Requisitos requisito) {
+    public Requisito create(Requisito requisito) {
         return reqRepo.save(requisito);
     }
 
     @Override
-    public Optional<Requisitos> update(Requisitos requisito, Long id) {
+    public Optional<Requisito> update(Requisito requisito, Long id) {
         if(reqRepo.findById(id).isPresent()){
             return Optional.ofNullable(reqRepo.save(requisito));
         }
@@ -56,7 +56,7 @@ public class RequisitosServiceImplementation implements IRequisitosService{
     }
 
     @Override
-    public Optional<List<Requisitos>> findByDescripcion(String descripcion) {
+    public Optional<List<Requisito>> findByDescripcion(String descripcion) {
         return Optional.ofNullable(reqRepo.findByDescripcion(descripcion));
     }
 

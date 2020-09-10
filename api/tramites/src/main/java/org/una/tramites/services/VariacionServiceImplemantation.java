@@ -10,40 +10,40 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.una.tramites.entities.Variaciones;
-import org.una.tramites.repositories.IVariacionesRepository;
+import org.una.tramites.entities.Variacion;
+import org.una.tramites.repositories.IVariacionRepository;
 
 /**
  *
  * @author Jeffry
  */
 @Service
-public class VariacionesServiceImplemantation implements IVariacionesService{
+public class VariacionServiceImplemantation implements IVariacionService{
     
     @Autowired
-    private IVariacionesRepository varRepository;
+    private IVariacionRepository varRepository;
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<Variaciones>> findAll() {
+    public Optional<List<Variacion>> findAll() {
         return Optional.ofNullable(varRepository.findAll());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Variaciones> findById(Long id) {
+    public Optional<Variacion> findById(Long id) {
         return varRepository.findById(id);
     }
 
     @Override
     @Transactional
-    public Variaciones create(Variaciones variacion) {
+    public Variacion create(Variacion variacion) {
         return varRepository.save(variacion);
     }
 
     @Override
     @Transactional
-    public Optional<Variaciones> update(Variaciones variacion, Long id) {
+    public Optional<Variacion> update(Variacion variacion, Long id) {
         if(varRepository.findById(id).isPresent())
             return Optional.ofNullable(varRepository.save(variacion));
         return null;
@@ -63,13 +63,13 @@ public class VariacionesServiceImplemantation implements IVariacionesService{
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<Variaciones>> findByGrupo(String grupo) {
+    public Optional<List<Variacion>> findByGrupo(String grupo) {
         return Optional.ofNullable(varRepository.findByGrupo(grupo));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<Variaciones>> findByDescripcion(String descripcion) {
+    public Optional<List<Variacion>> findByDescripcion(String descripcion) {
         return Optional.ofNullable(varRepository.findByDescripcion(descripcion));
     }
 

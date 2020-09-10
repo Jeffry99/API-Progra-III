@@ -27,7 +27,7 @@ import lombok.ToString;
  * @author Luis
  */
 @Entity
-@Table(name = "Transacciones")
+@Table(name = "transacciones")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -44,8 +44,8 @@ public class Transaccion implements Serializable {
     private Date fechaRegistro;
 
     @ManyToOne 
-    @JoinColumn(name="permisos_otorgados")
-    private Departamento permisoOtorgado;
+    @JoinColumn(name="permisos_otorgados_id")
+    private PermisoOtorgado permisoOtorgado;
     
     @Column(name = "objeto", length = 50)
     private String nombreCompleto;
