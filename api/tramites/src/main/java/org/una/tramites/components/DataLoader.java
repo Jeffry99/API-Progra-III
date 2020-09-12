@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.una.tramites.entities.Permiso;
 import org.una.tramites.entities.PermisoOtorgado;
 import org.una.tramites.entities.Usuario;
+import org.una.tramites.loaders.Permisos;
 import org.una.tramites.services.IUsuarioService;
 import org.una.tramites.services.IPermisoService;
 import org.una.tramites.services.IPermisoOtorgadoService;
@@ -42,7 +43,7 @@ public class DataLoader implements ApplicationRunner  {
 
     @Override
     public void run(ApplicationArguments args) {
-
+        
         if (usuarioService.findByCedula(cedula).isEmpty()) {
 
             Permiso permiso;
@@ -54,7 +55,8 @@ public class DataLoader implements ApplicationRunner  {
                 permiso.setCodigo(codigo);
                 permiso.setDescripcion("Registrar usuario nuevo");
                 permiso = permisoService.create(permiso);
-
+                //createPermisos();
+                
             } else {
                 permiso = permisoBuscado.get();
             }
@@ -76,5 +78,15 @@ public class DataLoader implements ApplicationRunner  {
         }
 
     }
+    
+        private void createPermisos() {
+        for (Permisos permiso : Permisos.values()) {
+            Permiso nuevoPermiso = new Permiso();
+            nuevoPermiso.setCodigo(permiso.getCodigo());
+            nuevoPermiso.setDescripcion(permiso.name());
+            permisoService.create(nuevoPermiso);
+        } 
+    }
+
 
 }
