@@ -19,45 +19,48 @@ import org.una.tramites.repositories.ITramiteEstadoRepository;
  */
 
 @Service
-public class TramiteServiceImplementation implements ITramiteEstadoService{
-     @Autowired
-    private ITramiteEstadoRepository tramRepository;
+public class TramiteEstadoServiceImplementation implements ITramiteEstadoService{
+    @Autowired
+    private ITramiteEstadoRepository tramitesEstadoRepository;
 
     @Override
     @Transactional(readOnly = true)
     public Optional<TramiteEstado> findById(Long id) {
-        return tramRepository.findById(id);
+        return tramitesEstadoRepository.findById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<List<TramiteEstado>> findAll() {
-        return Optional.ofNullable(tramRepository.findAll());
+        return Optional.ofNullable(tramitesEstadoRepository.findAll());
     }
 
     @Override
     @Transactional
-    public TramiteEstado create(TramiteEstado tramites) {
-        return tramRepository.save(tramites);
+    public TramiteEstado create(TramiteEstado tramitesE) {
+        return tramitesEstadoRepository.save(tramitesE);
     }
 
     @Override
-    public Optional<TramiteEstado> update(TramiteEstado tramites, Long id) {
-        if (tramRepository.findById(id).isPresent()) {
-            return Optional.ofNullable(tramRepository.save(tramites));
+    @Transactional
+    public Optional<TramiteEstado> update(TramiteEstado tramitesE, Long id) {
+        if (tramitesEstadoRepository.findById(id).isPresent()) {
+            return Optional.ofNullable(tramitesEstadoRepository.save(tramitesE));
         } else {
             return null;
         }
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
-        tramRepository.deleteById(id);
+        tramitesEstadoRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public void deleteAll() {
-        tramRepository.deleteAll();
+        tramitesEstadoRepository.deleteAll();
     }
     
 }
