@@ -129,7 +129,7 @@ public class VariacionController {
         }
     }
     
-    @GetMapping("/grupo")
+    @GetMapping("/{grupo}")
     public ResponseEntity<?> findByGrupo(@PathVariable(value = "grupo")String codigo){
         try{
             Optional<List<Variacion>> result = varService.findByGrupo(codigo);
@@ -143,7 +143,7 @@ public class VariacionController {
         }
     }
     
-    @GetMapping("/descripcion")
+    @GetMapping("/{descripcion}")
     public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion")String descripcion){
         try{
             Optional<List<Variacion>> result = varService.findByDescripcion(descripcion);

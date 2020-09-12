@@ -129,7 +129,7 @@ public class RequisitoController {
         }
     }
 
-    @GetMapping("/descripcion")
+    @GetMapping("/{descripcion}")
     @ApiOperation(value = "Obtiene una lista de requisitos por su descripcion", response = RequisitoDTO.class, responseContainer = "List", tags = "Requisitos")
     public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion")String descripcion){
         try{
