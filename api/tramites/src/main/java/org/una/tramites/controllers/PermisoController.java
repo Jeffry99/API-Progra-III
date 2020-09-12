@@ -35,7 +35,7 @@ public class PermisoController {
     @Autowired
     private IPermisoService permisoService;
 
-    @GetMapping()
+    @GetMapping("/")
     @ApiOperation(value = "Obtiene una lista de todos los permisos", response = PermisoDTO.class, responseContainer = "List", tags = "Permisos")
     public @ResponseBody
     ResponseEntity<?> findAll() {

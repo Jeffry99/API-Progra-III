@@ -55,7 +55,7 @@ public class PermisoOtorgado implements Serializable{
     private List<Transaccion> transacciones= new ArrayList<>();
     
     @Column(name = "fecha_registro", updatable = false)
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Setter(AccessLevel.NONE)
     private Date fechaRegistro;
     
