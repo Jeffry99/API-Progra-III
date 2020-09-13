@@ -42,6 +42,41 @@ public class DepartamentoController {
     private IDepartamentoService departamentoService;
     
     
+    @GetMapping()
+    @ApiOperation(value = "Obtiene una lista de todos los departamentos", response = DepartamentoDTO.class, responseContainer = "List", tags = "Departamentos")
+    public @ResponseBody
+    ResponseEntity<?> findAll() {
+        try {
+            Optional<List<Departamento>> result = departamentoService.findAll();
+            if (result.isPresent()) {
+                List<DepartamentoDTO> departamentosDTO = MapperUtils.DtoListFromEntityList(result.get(), DepartamentoDTO.class);
+                return new ResponseEntity<>(departamentosDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Obtiene un departamento a traves de su identificador unico", response = DepartamentoDTO.class, tags = "Departamentos")
+    public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
+        try {
+
+            Optional<Departamento> departamentoFound = departamentoService.findById(id);
+            if (departamentoFound.isPresent()) {
+                DepartamentoDTO departamentoDTO = MapperUtils.DtoFromEntity(departamentoFound.get(), DepartamentoDTO.class);
+                return new ResponseEntity<>(departamentoDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/") 
     @ApiOperation(value = "Crea un departamento", response = DepartamentoDTO.class, tags = "Departamentos")
@@ -92,35 +127,51 @@ public class DepartamentoController {
         }
     }
     
+    @GetMapping("/nombre/{nombre}") 
+    @ApiOperation(value = "Obtiene una lista de departamentos por nombre", response = DepartamentoDTO.class, responseContainer = "List", tags = "Departamentos")
+    public ResponseEntity<?> findByNombreAproximateIgnoreCase(@PathVariable(value = "nombre") String nombre) {
+        try {
+            Optional<List<Departamento>> result = departamentoService.findByNombreAproximateIgnoreCase(nombre);
+            if (result.isPresent()) {
+                List<DepartamentoDTO> departamentosDTO = MapperUtils.DtoListFromEntityList(result.get(), DepartamentoDTO.class);
+                return new ResponseEntity<>(departamentosDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
 
-//    @DeleteMapping("/{id}") 
-//    @ApiOperation(value = "Elimina un departamento", response = HttpStatus.class, tags = "Departamentos")
-//    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
-//        //TODO: Implementar este método
-//        try{
-//                    departamentoService.delete(id);
-//                    if(findById(id).getStatusCode() == HttpStatus.NO_CONTENT){
-//                        return new ResponseEntity<>(HttpStatus.OK);
-//                    }
-//                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//                }catch(Exception ex){
-//                    return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-//                }
-//    }
-//
-//    @DeleteMapping("/") 
-//    @ApiOperation(value = "Elimina todos los departamentos", response = HttpStatus.class, tags = "Departamentos")
-//    public ResponseEntity<?> deleteAll() {
-// 	//TODO: Implementar este método
-//        try{
-//            departamentoService.deleteAll();
-//            if(findAll().getStatusCode() == HttpStatus.NO_CONTENT){
-//                return new ResponseEntity<>(HttpStatus.OK);
-//            }
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }catch(Exception ex){
-//            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    } 
+    @DeleteMapping("/{id}") 
+    @ApiOperation(value = "Elimina un departamento", response = HttpStatus.class, tags = "Departamentos")
+    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
+        //TODO: Implementar este método
+        try{
+                    departamentoService.delete(id);
+                    if(findById(id).getStatusCode() == HttpStatus.NO_CONTENT){
+                        return new ResponseEntity<>(HttpStatus.OK);
+                    }
+                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                }catch(Exception ex){
+                    return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+    }
+
+    @DeleteMapping("/") 
+    @ApiOperation(value = "Elimina todos los departamentos", response = HttpStatus.class, tags = "Departamentos")
+    public ResponseEntity<?> deleteAll() {
+ 	//TODO: Implementar este método
+        try{
+            departamentoService.deleteAll();
+            if(findAll().getStatusCode() == HttpStatus.NO_CONTENT){
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }catch(Exception ex){
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    } 
     
 }

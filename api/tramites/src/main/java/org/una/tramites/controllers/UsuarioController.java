@@ -89,8 +89,15 @@ public class UsuarioController {
         try {
             AuthenticationResponse authenticationResponse = new AuthenticationResponse();
             String token = usuarioService.login(authenticationRequest);
+          //  System.out.println("Cedula AR: "+authenticationRequest.getCedula());
+            Optional<Usuario> usu = usuarioService.findByCedula(authenticationRequest.getCedula());
+          //  System.out.println("Cedula usu: "+usu.get().getCedula());
+          
+            UsuarioDTO usuario = MapperUtils.DtoFromEntity(usu.get(), UsuarioDTO.class);
+            System.out.println(usuario.getCedula());
             if (!token.isBlank()) {
                 authenticationResponse.setJwt(token);
+                authenticationResponse.setUsuario(usuario);
                 //TODO: Complete this   authenticationResponse.setUsuario(usuario);
                 //TODO: Complete this    authenticationResponse.setPermisos(permisosOtorgados);
                 return new ResponseEntity(authenticationResponse, HttpStatus.OK);

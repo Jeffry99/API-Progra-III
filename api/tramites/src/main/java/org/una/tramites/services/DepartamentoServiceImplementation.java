@@ -31,6 +31,24 @@ public class DepartamentoServiceImplementation implements IDepartamentoService{
     }
     
     @Override
+    @Transactional(readOnly = true)
+    public Optional<List<Departamento>> findByNombreAproximateIgnoreCase(String nombre) {
+        return Optional.ofNullable(departamentoRepository.findByNombreContainingIgnoreCase(nombre));
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<List<Departamento>> findAll() {
+        return Optional.ofNullable(departamentoRepository.findAll());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Departamento> findById(Long id) {
+        return departamentoRepository.findById(id);
+    }
+    
+    @Override
     @Transactional
     public Departamento create(Departamento usuario) {
         return departamentoRepository.save(usuario);

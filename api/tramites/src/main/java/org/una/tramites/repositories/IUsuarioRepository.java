@@ -30,8 +30,8 @@ public interface IUsuarioRepository extends JpaRepository<Usuario, Long> {
     public Usuario findNombreCompletoWithLikeSQL(@Param("nombreCompleto")String nombreCompleto);
 
     
-    @Query("select u from Usuario u where u.cedula = :cedula")
-    public Optional<Usuario> findByCedula(@Param("cedula")String cedula);
+    
+    public Optional<Usuario> findByCedula(String cedula);
     
     public List<Usuario>  findByDepartamento(Long id);
 
