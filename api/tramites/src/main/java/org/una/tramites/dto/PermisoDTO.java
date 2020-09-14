@@ -25,10 +25,13 @@ public class PermisoDTO {
     private Long id; 
     private String codigo;
     private String descripcion;
+    
     @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date fechaRegistro; 
+    
     @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date fechaModificacion;
+    
     private boolean estado; 
     
 }
