@@ -18,7 +18,11 @@ public class PermisoServiceImplementation implements IPermisoService {
     @Autowired
     private IPermisoRepository permisoRepository;
     
-
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<List<Permiso>> findByEstado(boolean estado) {
+        return Optional.ofNullable(permisoRepository.findByEstado(estado));
+    }
     @Override
     @Transactional(readOnly = true)
     public Optional<Permiso> findById(Long id) {
