@@ -48,6 +48,12 @@ public class PermisoOtorgadoServiceImplementation implements IPermisoOtorgadoSer
     public Optional<List<PermisoOtorgado>> findPermisoOtorgadoByfechaRegistro(Date fechaRegistro) {
         return Optional.ofNullable(permisoOtorgadoRepository.findByFechaRegistro(fechaRegistro));
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<PermisoOtorgado> findByUsuarioAndPermiso(Long usuario, Long permiso){
+        return Optional.ofNullable(permisoOtorgadoRepository.findByUsuarioAndPermiso(usuario, permiso));
+    }
 
     @Override
     @Transactional

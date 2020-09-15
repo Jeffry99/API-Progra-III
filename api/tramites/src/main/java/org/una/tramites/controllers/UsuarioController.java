@@ -89,9 +89,7 @@ public class UsuarioController {
         try {
             AuthenticationResponse authenticationResponse = new AuthenticationResponse();
             String token = usuarioService.login(authenticationRequest);
-          //  System.out.println("Cedula AR: "+authenticationRequest.getCedula());
             Optional<Usuario> usu = usuarioService.findByCedula(authenticationRequest.getCedula());
-          //  System.out.println("Cedula usu: "+usu.get().getCedula());
           
             UsuarioDTO usuario = MapperUtils.DtoFromEntity(usu.get(), UsuarioDTO.class);
             System.out.println(usuario.getCedula());
@@ -100,6 +98,31 @@ public class UsuarioController {
                 authenticationResponse.setUsuario(usuario);
                 //TODO: Complete this    authenticationResponse.setPermisos(permisosOtorgados);
                 return new ResponseEntity(authenticationResponse, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Credenciales invalidos", HttpStatus.UNAUTHORIZED);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @PostMapping("/cambioContrasena") 
+    @ResponseBody
+    @ApiOperation(value = "Obtiene permiso para cambiar de contraseña", response = UsuarioDTO.class, tags = "Usuarios")
+    public ResponseEntity<?> solicitarCambioContrasena(@Valid @RequestBody AuthenticationRequest authenticationRequest, BindingResult bindingResult) {
+        
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity("La información no esta bien formada o no coincide con el formato esperado", HttpStatus.BAD_REQUEST);
+        }
+        try {
+            AuthenticationResponse authenticationResponse = new AuthenticationResponse();
+            String token = usuarioService.login(authenticationRequest);
+            Optional<Usuario> usu = usuarioService.findByCedula(authenticationRequest.getCedula());
+          
+            UsuarioDTO usuario = MapperUtils.DtoFromEntity(usu.get(), UsuarioDTO.class);
+            if (!token.isBlank()) {
+                
+                return new ResponseEntity<>(usuario, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Credenciales invalidos", HttpStatus.UNAUTHORIZED);
             }
@@ -158,6 +181,10 @@ public class UsuarioController {
     }
     
     
+    
+    
+    
+    
     @GetMapping("/jefedepartamento/{id}") 
     @ApiOperation(value = "Obtiene un usuario jefe por departamento", response = UsuarioDTO.class, tags = "Usuarios")
     public ResponseEntity<?> findJefeByDepartamento(@PathVariable(value = "id") Long id) {
@@ -193,6 +220,29 @@ public class UsuarioController {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @PutMapping("/cambiarContrasena/{id}") 
+    @ApiOperation(value = "Cambia contrasena de un usuario", response = UsuarioDTO.class, tags = "Usuarios")
+    @ResponseBody
+    public ResponseEntity<?> cambiarContrasena(@PathVariable(value = "id") Long id, @RequestBody Usuario usuarioModified) {
+        try {
+            Optional<Usuario> usuarioUpdated = usuarioService.cambioContrasena(usuarioModified, id);
+            if (usuarioUpdated.isPresent()) {
+                UsuarioDTO usuarioDto = MapperUtils.DtoFromEntity(usuarioUpdated.get(), UsuarioDTO.class);
+                return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
+
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    
+    
+    
 
     @PutMapping("/{id}") 
     @ApiOperation(value = "Modifica un usuario", response = UsuarioDTO.class, tags = "Usuarios")

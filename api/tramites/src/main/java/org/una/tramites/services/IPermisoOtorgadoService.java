@@ -16,6 +16,9 @@ public interface IPermisoOtorgadoService {
 
     public Optional<PermisoOtorgado> findById(Long id);
 
+    
+    public Optional<PermisoOtorgado> findByUsuarioAndPermiso(Long usuario, Long permiso);
+    
     public Optional<List<PermisoOtorgado>> findByUsuario(Long id);
 
     public Optional<List<PermisoOtorgado>> findByPermiso(Long id);

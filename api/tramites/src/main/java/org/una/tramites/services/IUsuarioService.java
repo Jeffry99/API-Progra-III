@@ -30,6 +30,8 @@ public interface IUsuarioService {
     public Usuario create(Usuario usuario);
 
     public Optional<Usuario> update(Usuario usuario, Long id);
+    
+    public Optional<Usuario>  cambioContrasena(Usuario usu, Long id); 
 
     public void delete(Long id);
 

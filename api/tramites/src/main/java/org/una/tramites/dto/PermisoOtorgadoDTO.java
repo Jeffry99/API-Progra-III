@@ -20,8 +20,8 @@ import org.una.tramites.entities.Usuario;
 public class PermisoOtorgadoDTO {
  
     private Long id; 
-    private Usuario usuarioid;   
-    private Permiso permisoid; 
+    private UsuarioDTO usuario;   
+    private PermisoDTO permiso; 
     @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date fechaRegistro; 
     private boolean estado; 

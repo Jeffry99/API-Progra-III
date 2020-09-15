@@ -58,6 +58,17 @@ public class UsuarioServiceImplementation implements IUsuarioService, UserDetail
             usuario.setPasswordEncriptado(bCryptPasswordEncoder.encode(password));
         }
     } 
+    
+    @Override
+    @Transactional
+    public Optional<Usuario>  cambioContrasena(Usuario usu, Long id){
+        if (usuarioRepository.findById(id).isPresent()) {
+            encriptarPassword(usu);
+            return Optional.ofNullable(usuarioRepository.save(usu));
+        } else {
+            return null;
+        }
+    }
 
 
     @Override
@@ -111,6 +122,7 @@ public class UsuarioServiceImplementation implements IUsuarioService, UserDetail
     @Transactional
     public Optional<Usuario> update(Usuario usuario, Long id) {
         if (usuarioRepository.findById(id).isPresent()) {
+            
             return Optional.ofNullable(usuarioRepository.save(usuario));
         } else {
             return null;

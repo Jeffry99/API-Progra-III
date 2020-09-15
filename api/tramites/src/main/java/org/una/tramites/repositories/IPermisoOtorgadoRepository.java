@@ -18,5 +18,6 @@ public interface IPermisoOtorgadoRepository extends JpaRepository<PermisoOtorgad
     
     public List<PermisoOtorgado> findByPermiso(Long permisoId);
     
+    
     public List<PermisoOtorgado> findByFechaRegistro(Date fechaRegistro);
 }

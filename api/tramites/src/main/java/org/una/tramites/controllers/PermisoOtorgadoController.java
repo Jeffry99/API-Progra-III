@@ -71,6 +71,22 @@ public class PermisoOtorgadoController {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @GetMapping("/usuario_permiso/{usuario}/{permiso}")
+    @ApiOperation(value = "Obtiene un permiso otorgado por su permiso y usuario", response = PermisoOtorgadoDTO.class, tags = "Permisos_Otorgados")
+    public ResponseEntity<?> findByUsuarioIdAndPermisoId(@PathVariable(value = "usuario") Long usuario, @PathVariable(value = "permiso") Long permiso) {
+        try {
+            Optional<PermisoOtorgado> perOtorgadoFound = perOtorgadoService.findByUsuarioAndPermiso(usuario, permiso);
+            if (perOtorgadoFound.isPresent()) {
+                PermisoOtorgadoDTO perOtorDto = MapperUtils.DtoFromEntity(perOtorgadoFound.get(), PermisoOtorgadoDTO.class);
+                return new ResponseEntity<>(perOtorDto, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
