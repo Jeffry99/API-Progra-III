@@ -14,8 +14,8 @@ import org.una.tramites.entities.ParametrosGenerales;
  * @author Luis
  */
 public interface IParametrosGeneralesRepository extends JpaRepository<ParametrosGenerales, Long>{
-    public List<ParametrosGenerales> findByNombre(String nombre);
-    public List<ParametrosGenerales> findByValor(String valor);
-    public List<ParametrosGenerales> findByDescripcion(String descripcion);
+    public List<ParametrosGenerales> findByNombreContainingIgnoreCase(String nombre);
+    public List<ParametrosGenerales> findByValorContainingIgnoreCase(String valor);
+    public List<ParametrosGenerales> findByDescripcionContainingIgnoreCase(String descripcion);
     public List<ParametrosGenerales> findByEstado(boolean estado);
 }

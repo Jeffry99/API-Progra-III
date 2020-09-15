@@ -5,7 +5,7 @@
  */
 package org.una.tramites.dto;
 
-import java.sql.Date;
+import java.util.Date;
 import javax.json.bind.annotation.JsonbDateFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;

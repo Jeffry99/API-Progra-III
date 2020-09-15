@@ -32,19 +32,19 @@ public class ParametrosGeneralesServiceImplementacion implements IParametrosGene
     @Override
     @Transactional(readOnly = true)
     public Optional<List<ParametrosGenerales>> findByNombre(String nombre) {
-        return Optional.ofNullable(paramGenRepository.findByNombre(nombre));
+        return Optional.ofNullable(paramGenRepository.findByNombreContainingIgnoreCase(nombre));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<List<ParametrosGenerales>> findByValor(String valor) {
-        return Optional.ofNullable(paramGenRepository.findByValor(valor));
+        return Optional.ofNullable(paramGenRepository.findByValorContainingIgnoreCase(valor));
     }
 
     @Override
     @Transactional(readOnly = true)
     public Optional<List<ParametrosGenerales>> findByDescripcion(String descripcion) {
-        return Optional.ofNullable(paramGenRepository.findByDescripcion(descripcion));
+        return Optional.ofNullable(paramGenRepository.findByDescripcionContainingIgnoreCase(descripcion));
     }
 
     @Override

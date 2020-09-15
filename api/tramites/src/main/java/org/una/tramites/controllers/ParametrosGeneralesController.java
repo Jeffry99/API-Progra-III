@@ -41,7 +41,7 @@ public class ParametrosGeneralesController {
     @Autowired
     private IParametrosGeneralesService paramGenService;
     
-    @GetMapping("/{nombre}")
+    @GetMapping("/pornombre/{nombre}")
     @ApiOperation(value = "Obtiene los Paremetros Generales segun el nombre", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
     public ResponseEntity<?> findByNombre(@PathVariable(value = "nombre")String nombre) {
         try{
@@ -72,7 +72,7 @@ public class ParametrosGeneralesController {
         }
     }
     
-    @GetMapping("/{valor}")
+    @GetMapping("/porvalor/{valor}")
     @ApiOperation(value = "Obtiene una lista de Parametros Generales segun el valor que guardan", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
     public ResponseEntity<?> findByValor(@PathVariable(value = "valor") String valor){
         try{
@@ -86,7 +86,7 @@ public class ParametrosGeneralesController {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/{descripcion}")
+    @GetMapping("/pordescripcion/{descripcion}")
     @ApiOperation(value = "Obtiene una lista de Parametros Generales segun su descripcion", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
     public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion")String descripcion){
         try{
@@ -132,7 +132,7 @@ public class ParametrosGeneralesController {
         }
     }
     
-    @GetMapping("/{estado}") 
+    @GetMapping("/porestado/{estado}") 
     @ApiOperation(value = "Obtiene una lista de parametros generales por estado", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
     public ResponseEntity<?> findByEstado(@PathVariable(value = "estado") boolean estado) {
         try {
