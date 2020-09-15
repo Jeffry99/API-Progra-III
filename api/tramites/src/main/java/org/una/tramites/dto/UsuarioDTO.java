@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.una.tramites.entities.Departamento;
 
 /**
  *
@@ -27,6 +28,7 @@ public class UsuarioDTO {
     private String nombreCompleto;   
     private String cedula; 
     private boolean estado; 
+    private String passwordEncriptado;
     
     @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date fechaRegistro; 
@@ -35,7 +37,7 @@ public class UsuarioDTO {
     private Date fechaModificacion; 
     
     private boolean esJefe;
-    private Long departamentosId;
+    private DepartamentoDTO departamento;
     
     
    
