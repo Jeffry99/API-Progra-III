@@ -69,4 +69,9 @@ public class PermisoOtorgado implements Serializable{
         estado=true;
         fechaRegistro = new Date();
     }
+    
+    @PreUpdate
+    public void preUpdate() {
+        
+    }
 }

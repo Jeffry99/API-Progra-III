@@ -56,17 +56,18 @@ public class TramiteTipoController {
         }
     }
     
-    @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene un tipo de tramite a travez de su identificador unico", response = TramiteTipoDTO.class, tags = "Tramites_Tipos")
+  @GetMapping("/{id}") 
+    @ApiOperation(value = "Obtiene un usuario por su id", response = TramiteTipoDTO.class, tags = "Tramites_Tipos")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
-            Optional<TramiteTipo> tramiteFound = traService.findById(id);
-            if (tramiteFound.isPresent()) {
-                TramiteTipoDTO tramiteDTO = MapperUtils.DtoFromEntity(tramiteFound.get(), TramiteTipoDTO.class);
-                return new ResponseEntity<>(tramiteDTO, HttpStatus.OK);
+            Optional<TramiteTipo> traFound = traService.findById(id);
+            if (traFound.isPresent()) {
+                TramiteTipoDTO traDTO = MapperUtils.DtoFromEntity(traFound.get(), TramiteTipoDTO.class);
+                return new ResponseEntity<>(traDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -133,11 +134,11 @@ public class TramiteTipoController {
         }
     }
     
-    @GetMapping("/usuarios_en_departamento/{id}")
+    @GetMapping("/usuarios_en_departamento/{depaId}")
     @ApiOperation(value = "Obtiene una lista de tipos de tramites por su departamento", response = TramiteTipoDTO.class, responseContainer = "List", tags = "Tramites_Tipos")
-    public ResponseEntity<?> findByDepartamentoId(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<?> findByDepartamentoId(@PathVariable(value = "depaId") Long depaId) {
         try {
-            Optional<List<TramiteTipo>> result = traService.findByDepartamentoId(id);
+            Optional<List<TramiteTipo>> result = traService.findByDepartamentoId(depaId);
             if (result.isPresent()) {
                 List<TramiteTipoDTO> traDto = MapperUtils.DtoListFromEntityList(result.get(), TramiteTipoDTO.class);
                 return new ResponseEntity<>(traDto, HttpStatus.OK);
@@ -148,7 +149,7 @@ public class TramiteTipoController {
         }
     }
     
-    @GetMapping("/{descripcion}")
+    @GetMapping("/buscarDescripcion/{descripcion}")
     @ApiOperation(value = "Obtiene una lista de tipos de tramites por su descripcion", response = TramiteTipoDTO.class, responseContainer = "List", tags = "Tramites_Tipos")
     public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion") String descripcion) {
         try {
