@@ -24,6 +24,8 @@ public interface IPermisoRepository extends JpaRepository<Permiso, Long>{
     
     public List<Permiso> findByFechaModificacion(Date fechaModificacion);
     
+    public List<Permiso> findByEstado(boolean estado);
+    
     @Query("select p from Permiso p where p.codigo = :codigo")
     public Permiso findByCodigo(@PathParam("codigo")String codigo);
 }

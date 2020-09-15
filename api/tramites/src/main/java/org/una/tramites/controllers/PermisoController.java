@@ -67,7 +67,21 @@ public class PermisoController {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @GetMapping("/estado/{estado}") 
+    @ApiOperation(value = "Obtiene una lista de permisos por estado", response = PermisoDTO.class, responseContainer = "List", tags = "Permisos")
+    public ResponseEntity<?> findByEstado(@PathVariable(value = "estado") boolean estado) {
+        try {
+            Optional<List<Permiso>> result = permisoService.findByEstado(estado);
+            if (result.isPresent()) {
+                List<PermisoDTO> permisoDTO = MapperUtils.DtoListFromEntityList(result.get(), PermisoDTO.class);
+                return new ResponseEntity<>(permisoDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
     @ApiOperation(value = "Crea un permiso", response = HttpStatus.class, tags = "Permisos")
