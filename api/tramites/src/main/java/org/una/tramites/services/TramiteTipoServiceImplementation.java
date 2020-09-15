@@ -70,7 +70,7 @@ public class TramiteTipoServiceImplementation implements ITramiteTipoService{
     @Override
     @Transactional(readOnly = true)
     public Optional<List<TramiteTipo>> findByDescripcion(String descripcion) {
-        return Optional.ofNullable(traRepository.findByDescripcion(descripcion));
+        return Optional.ofNullable(traRepository.findByDescripcionContainingIgnoreCase(descripcion));
     }
 
 }

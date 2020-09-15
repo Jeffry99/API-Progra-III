@@ -18,5 +18,5 @@ public interface ITramiteTipoRepository extends JpaRepository<TramiteTipo, Long>
     
     public List<TramiteTipo> findByDepartamentoId(Long id);
     
-    public List<TramiteTipo> findByDescripcion(@Param("descripcion")String descripcion);
+    public List<TramiteTipo> findByDescripcionContainingIgnoreCase(String descripcion);
 }
