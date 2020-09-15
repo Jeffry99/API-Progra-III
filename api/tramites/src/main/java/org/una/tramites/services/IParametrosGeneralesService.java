@@ -25,4 +25,13 @@ public interface IParametrosGeneralesService {
     public Optional<ParametrosGenerales> update(ParametrosGenerales pg, Long id);
     
     public Optional<List<ParametrosGenerales>> findAll();
+    
+    public void delete(Long id);
+    
+    public void deleteAll();
+    
+    public ParametrosGenerales create(ParametrosGenerales pg);
+    
+    public Optional<ParametrosGenerales> findById(Long id);
+    
 }

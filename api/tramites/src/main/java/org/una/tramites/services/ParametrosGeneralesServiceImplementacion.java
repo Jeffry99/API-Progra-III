@@ -62,5 +62,29 @@ public class ParametrosGeneralesServiceImplementacion implements IParametrosGene
         return Optional.ofNullable(paramGenRepository.findAll());
     }
 
+    @Override
+    @Transactional
+    public ParametrosGenerales create(ParametrosGenerales pg) {
+        return paramGenRepository.save(pg);
+    }
+    
+    @Override
+    @Transactional
+    public void delete(Long id) {
+        paramGenRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public void deleteAll() {
+        paramGenRepository.deleteAll();
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<ParametrosGenerales> findById(Long id) {
+        return paramGenRepository.findById(id);
+    }
+    
 }
 

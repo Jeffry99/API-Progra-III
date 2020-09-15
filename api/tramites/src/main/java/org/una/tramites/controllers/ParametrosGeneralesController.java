@@ -12,14 +12,18 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.una.tramites.dto.ParametrosGeneralesDTO;
+import org.una.tramites.dto.PermisoDTO;
 import org.una.tramites.entities.ParametrosGenerales;
 import org.una.tramites.entities.Permiso;
 import org.una.tramites.services.IParametrosGeneralesService;
@@ -48,6 +52,22 @@ public class ParametrosGeneralesController {
             }
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch(Exception ex){
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Obtiene un parametro general por su identificador unico", response = ParametrosGeneralesDTO.class, tags = "Parametros_Generales")
+    public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
+        try {
+            Optional<ParametrosGenerales> permisoFound = paramGenService.findById(id);
+            if (permisoFound.isPresent()) {
+                PermisoDTO perDto = MapperUtils.DtoFromEntity(permisoFound.get(), PermisoDTO.class);
+                return new ResponseEntity<>(perDto, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -82,6 +102,7 @@ public class ParametrosGeneralesController {
     }
     
     @PutMapping("/{id}")
+    @ApiOperation(value = "Modifica un parametro general", response = HttpStatus.class, tags = "Parametros_Generales")
     @ResponseBody
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody ParametrosGenerales parGen) {
         try {
@@ -124,6 +145,49 @@ public class ParametrosGeneralesController {
             }
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/")
+    @ApiOperation(value = "Crea un parametro general", response = HttpStatus.class, tags = "Parametros_Generales")
+    @ResponseBody
+    public ResponseEntity<?> create(@RequestBody ParametrosGenerales pg) {
+        try {
+            ParametrosGenerales pgCreated = paramGenService.create(pg);
+            PermisoDTO perDto = MapperUtils.DtoFromEntity(pgCreated, PermisoDTO.class);
+            return new ResponseEntity<>(perDto, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Elimina un parametro general", response = HttpStatus.class, tags = "Parametros_Generales")
+    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
+        try {
+            paramGenService.delete(id);
+            if (findById(id).getStatusCode() == HttpStatus.NO_CONTENT) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/")
+    @ApiOperation(value = "Elimina todos los permisos", response = HttpStatus.class, tags = "Parametros_Generales")
+    public ResponseEntity<?> deleteAll() {
+        try {
+            paramGenService.deleteAll();
+            if (findAll().getStatusCode() == HttpStatus.NO_CONTENT) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
