@@ -18,6 +18,8 @@ public interface IParametrosGeneralesService {
     
     public Optional<List<ParametrosGenerales>> findByValor(String valor);
     
+    public Optional<List<ParametrosGenerales>> findByEstado(boolean estado);
+    
     public Optional<List<ParametrosGenerales>> findByDescripcion(String descripcion);
     
     public Optional<ParametrosGenerales> update(ParametrosGenerales pg, Long id);

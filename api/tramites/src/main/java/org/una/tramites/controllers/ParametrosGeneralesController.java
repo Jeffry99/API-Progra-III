@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.una.tramites.dto.ParametrosGeneralesDTO;
 import org.una.tramites.entities.ParametrosGenerales;
+import org.una.tramites.entities.Permiso;
 import org.una.tramites.services.IParametrosGeneralesService;
 import org.una.tramites.utils.MapperUtils;
 
@@ -107,6 +108,22 @@ public class ParametrosGeneralesController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @GetMapping("/{estado}") 
+    @ApiOperation(value = "Obtiene una lista de parametros generales por estado", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
+    public ResponseEntity<?> findByEstado(@PathVariable(value = "estado") boolean estado) {
+        try {
+            Optional<List<ParametrosGenerales>> result = paramGenService.findByEstado(estado);
+            if (result.isPresent()) {
+                List<ParametrosGeneralesDTO> permisoDTO = MapperUtils.DtoListFromEntityList(result.get(), ParametrosGeneralesDTO.class);
+                return new ResponseEntity<>(permisoDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

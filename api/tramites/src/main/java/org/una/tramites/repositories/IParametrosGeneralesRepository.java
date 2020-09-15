@@ -17,4 +17,5 @@ public interface IParametrosGeneralesRepository extends JpaRepository<Parametros
     public List<ParametrosGenerales> findByNombre(String nombre);
     public List<ParametrosGenerales> findByValor(String valor);
     public List<ParametrosGenerales> findByDescripcion(String descripcion);
+    public List<ParametrosGenerales> findByEstado(boolean estado);
 }

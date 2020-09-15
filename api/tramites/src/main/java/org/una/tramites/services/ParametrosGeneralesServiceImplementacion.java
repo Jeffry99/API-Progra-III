@@ -25,6 +25,12 @@ public class ParametrosGeneralesServiceImplementacion implements IParametrosGene
     
     @Override
     @Transactional(readOnly = true)
+    public Optional<List<ParametrosGenerales>> findByEstado(boolean estado) {
+        return Optional.ofNullable(paramGenRepository.findByEstado(estado));
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
     public Optional<List<ParametrosGenerales>> findByNombre(String nombre) {
         return Optional.ofNullable(paramGenRepository.findByNombre(nombre));
     }
