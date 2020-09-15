@@ -4,6 +4,8 @@ package org.una.tramites.repositories;
 import java.util.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.una.tramites.entities.PermisoOtorgado;
 
 /**
@@ -12,7 +14,9 @@ import org.una.tramites.entities.PermisoOtorgado;
  */
 public interface IPermisoOtorgadoRepository extends JpaRepository<PermisoOtorgado, Long>{
     
-    public PermisoOtorgado findByUsuarioAndPermiso(Long usuario, Long permiso);
+    
+    @Query("SELECT p FROM PermisoOtorgado p LEFT JOIN p.usuario u LEFT JOIN p.permiso j WHERE u.id = :usuarioID AND j.id = :permisoID")
+    public PermisoOtorgado findByUsuarioIdAndPermisoId(@Param("usuarioID") Long usuario, @Param("permisoID")Long permiso);
     
     public List<PermisoOtorgado> findByUsuario(Long usuarioId);
     

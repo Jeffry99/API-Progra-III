@@ -52,7 +52,7 @@ public class PermisoOtorgadoServiceImplementation implements IPermisoOtorgadoSer
     @Override
     @Transactional(readOnly = true)
     public Optional<PermisoOtorgado> findByUsuarioAndPermiso(Long usuario, Long permiso){
-        return Optional.ofNullable(permisoOtorgadoRepository.findByUsuarioAndPermiso(usuario, permiso));
+        return Optional.ofNullable(permisoOtorgadoRepository.findByUsuarioIdAndPermisoId(usuario, permiso));
     }
 
     @Override
