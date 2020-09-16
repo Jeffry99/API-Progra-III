@@ -18,4 +18,6 @@ public interface IVariacionRepository extends JpaRepository<Variacion, Long>{
     public List<Variacion> findByGrupo(String grupo);
     
     public List<Variacion> findByDescripcion(String descripcion);
+    
+    public List<Variacion> findByTramitesTipos(Long id);
 }
