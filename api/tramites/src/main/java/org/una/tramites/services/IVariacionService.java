@@ -19,6 +19,8 @@ public interface IVariacionService {
     public Optional<Variacion> findById(Long id);
 
     public Variacion create(Variacion variacion);
+    
+    public Optional<List<Variacion>> findByTramitesTipos(Long Id);
 
     public Optional<Variacion> update(Variacion variacion, Long id);
 

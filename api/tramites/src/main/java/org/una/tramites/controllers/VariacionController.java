@@ -54,8 +54,23 @@ public class VariacionController {
         }
     }
     
+    @GetMapping("/tipostramites/{id}")
+    @ApiOperation(value = "Obtiene una lista de variaciones por su tramite", response = VariacionDTO.class, responseContainer = "List", tags = "Variaciones")
+    public @ResponseBody ResponseEntity<?> findByTramiteTipo(@PathVariable(value = "id") Long id){
+        try{
+            Optional<List<Variacion>> result = varService.findByTramitesTipos(id);
+            if(result.isPresent()){
+                List<VariacionDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), VariacionDTO.class);
+                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch(Exception ex){
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
     @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene una variacion a travez de su identificador unico", response = VariacionDTO.class, tags = "Variaciones")
+    @ApiOperation(value = "Obtiene una variacion a traves de su identificador unico", response = VariacionDTO.class, tags = "Variaciones")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 

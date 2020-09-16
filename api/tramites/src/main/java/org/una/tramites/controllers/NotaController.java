@@ -56,7 +56,7 @@ public class NotaController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene una notas a travez de su identificador unico", response = NotaDTO.class, tags = "Notas")
+    @ApiOperation(value = "Obtiene una notas a traves de su identificador unico", response = NotaDTO.class, tags = "Notas")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -131,7 +131,7 @@ public class NotaController {
     }
 
     @GetMapping("/{titulo}")
-    @ApiOperation(value = "Obtiene una nota a travez de su titulo", response = NotaDTO.class, tags = "Notas")
+    @ApiOperation(value = "Obtiene una nota a traves de su titulo", response = NotaDTO.class, tags = "Notas")
     public ResponseEntity<?> findByTitulo(@PathVariable(value = "titulo") String titulo) {
         try {
 

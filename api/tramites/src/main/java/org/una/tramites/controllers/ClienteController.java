@@ -56,7 +56,7 @@ public class ClienteController {
     }
     
     @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene un cliente a travez de su identificador unico", response = ClienteDTO.class, tags = "Clientes")
+    @ApiOperation(value = "Obtiene un cliente a traves de su identificador unico", response = ClienteDTO.class, tags = "Clientes")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 

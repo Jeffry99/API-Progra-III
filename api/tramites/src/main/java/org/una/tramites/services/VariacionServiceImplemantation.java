@@ -34,6 +34,12 @@ public class VariacionServiceImplemantation implements IVariacionService{
     public Optional<Variacion> findById(Long id) {
         return varRepository.findById(id);
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<List<Variacion>> findByTramitesTipos(Long id) {
+        return Optional.ofNullable(varRepository.findByTramitesTipos(id));
+    }
 
     @Override
     @Transactional
