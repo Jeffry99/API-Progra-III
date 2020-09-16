@@ -42,7 +42,7 @@ public class ParametrosGeneralesController {
     private IParametrosGeneralesService paramGenService;
     
     @GetMapping("/pornombre/{nombre}")
-    @ApiOperation(value = "Obtiene los Paremetros Generales segun el nombre", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
+    @ApiOperation(value = "Obtiene los paremetros generales segun el nombre", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
     public ResponseEntity<?> findByNombre(@PathVariable(value = "nombre")String nombre) {
         try{
             Optional<List<ParametrosGenerales>> result = paramGenService.findByNombre(nombre);
@@ -118,7 +118,7 @@ public class ParametrosGeneralesController {
     }
     
     @GetMapping()
-    @ApiOperation(value = "Obtiene una lista de todos los Parametros Generales", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
+    @ApiOperation(value = "Obtiene una lista de todos los parametros generales", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
     public @ResponseBody ResponseEntity<?> findAll() {
         try {
             Optional<List<ParametrosGenerales>> result = paramGenService.findAll();

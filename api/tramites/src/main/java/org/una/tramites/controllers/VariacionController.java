@@ -55,7 +55,7 @@ public class VariacionController {
     }
     
     @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene una variacion a travez de su identificador unico", response = VariacionDTO.class, tags = "Variaciones")
+    @ApiOperation(value = "Obtiene una variacion a traves de su identificador unico", response = VariacionDTO.class, tags = "Variaciones")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 

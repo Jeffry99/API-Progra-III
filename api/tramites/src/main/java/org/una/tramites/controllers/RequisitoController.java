@@ -55,7 +55,7 @@ public class RequisitoController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene un requisito a travez de su identificador unico", response = RequisitoDTO.class, tags = "Requisitos")
+    @ApiOperation(value = "Obtiene un requisito a traves de su identificador unico", response = RequisitoDTO.class, tags = "Requisitos")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 

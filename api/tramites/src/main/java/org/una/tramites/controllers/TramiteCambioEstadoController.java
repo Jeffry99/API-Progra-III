@@ -40,7 +40,7 @@ public class TramiteCambioEstadoController {
     private ITramiteCambioEstadoService tramiteService;
 
     @GetMapping()
-    @ApiOperation(value = "Obtiene una lista de todos los tramites cambio Estado", response = TramiteCambioEstadoDTO.class, responseContainer = "List", tags = "Tramites_Cambio_Estado")
+    @ApiOperation(value = "Obtiene una lista de todos los tramites cambio estado", response = TramiteCambioEstadoDTO.class, responseContainer = "List", tags = "Tramites_Cambio_Estado")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -57,7 +57,7 @@ public class TramiteCambioEstadoController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene un tramite cambio estado a travez de su identificador unico", response = TramiteCambioEstadoDTO.class, tags = "Tramites_Cambio_Estado")
+    @ApiOperation(value = "Obtiene un tramite cambio estado a traves de su identificador unico", response = TramiteCambioEstadoDTO.class, tags = "Tramites_Cambio_Estado")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
