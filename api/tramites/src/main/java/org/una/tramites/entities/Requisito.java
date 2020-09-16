@@ -62,8 +62,8 @@ public class Requisito implements Serializable {
     @JoinColumn(name="variaciones_id")
     private Variacion variaciones;
     
-    //@OneToMany(cascade = CascadeType.ALL, mappedBy = "Requisitos") 
-    //private List<RequisitoPresentado> requisitosPresentados = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "requisito") 
+    private List<RequisitoPresentado> requisitosPresentados = new ArrayList<>();
     
     @PrePersist
     public void prePersist() {
