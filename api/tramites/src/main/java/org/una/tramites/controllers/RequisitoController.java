@@ -55,7 +55,7 @@ public class RequisitoController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Obtiene un requisito a traves de su identificador unico", response = RequisitoDTO.class, tags = "Requisitos")
+    @ApiOperation(value = "Obtiene un requisito a traves de su identificador unico", response = RequisitoDTO.class,  tags = "Requisitos")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -63,6 +63,23 @@ public class RequisitoController {
             if (variacionFound.isPresent()) {
                 RequisitoDTO variacionDto = MapperUtils.DtoFromEntity(variacionFound.get(), RequisitoDTO.class);
                 return new ResponseEntity<>(variacionDto, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @GetMapping("/variacion/{id}")
+    @ApiOperation(value = "Obtiene una lista de requisitos a traves de su variacion", response = RequisitoDTO.class, responseContainer = "List", tags = "Requisitos")
+    public ResponseEntity<?> findByVariacionId(@PathVariable(value = "id") Long id) {
+        try {
+
+            Optional<List<Requisito>> result = reqService.findByVariaciones(id);
+            if(result.isPresent()){
+                List<RequisitoDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitoDTO.class);
+                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

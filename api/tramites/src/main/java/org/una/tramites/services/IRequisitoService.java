@@ -19,6 +19,8 @@ public interface IRequisitoService {
 
     public Optional<Requisito> findById(Long id);
 
+    public Optional<List<Requisito>> findByVariaciones(Long Id);
+    
     public Requisito create(Requisito requisito);
 
     public Optional<Requisito> update(Requisito requisito, Long id);

@@ -31,6 +31,11 @@ public class RequisitoServiceImplementation implements IRequisitoService{
     public Optional<Requisito> findById(Long id) {
         return reqRepo.findById(id);
     }
+    
+    @Override
+    public Optional<List<Requisito>> findByVariaciones(Long variacionId){
+        return Optional.ofNullable(reqRepo.findByVariaciones(variacionId));
+    }
 
     @Override
     public Requisito create(Requisito requisito) {
