@@ -64,7 +64,7 @@ public class ParametrosGenerales implements Serializable {
     
     @PrePersist
     public void prePersist() {
-        estado=true;
+     //   estado=true;
         fechaRegistro = new Date();
         fechaModificacion = new Date();
     }
