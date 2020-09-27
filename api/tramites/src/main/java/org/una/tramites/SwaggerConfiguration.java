@@ -94,7 +94,8 @@ public class SwaggerConfiguration {
                          new Tag("Tramites_Cambio_Estado", "Controller de Tramite Cambio Estado"),
                          new Tag("Tramites_Registrados", "Controller de Tramites Registrados"),
                          new Tag("Transacciones", "Controller de Transacciones"),
-                         new Tag("Tramites_Estados", "Controller de Tramite Estado")
+                         new Tag("Tramites_Estados", "Controller de Tramite Estado"),
+                         new Tag("Autenticacion", "Controller para la autenticacion del usuario")
                 );
 
     }

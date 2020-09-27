@@ -28,6 +28,7 @@ import org.una.tramites.dto.AuthenticationRequest;
 import org.una.tramites.dto.AuthenticationResponse;
 import org.una.tramites.dto.UsuarioDTO;
 import org.una.tramites.entities.Usuario;
+import org.una.tramites.services.IAutenticacionService;
 import org.una.tramites.services.IUsuarioService;
 import org.una.tramites.utils.MapperUtils;
 /**
@@ -35,7 +36,7 @@ import org.una.tramites.utils.MapperUtils;
  * @author Pablo-VE
  */
 @RestController
-@RequestMapping("/usuarios") // 
+@RequestMapping("/usuarios") 
 @Api(tags = {"Usuarios"})
 public class UsuarioController {
 
@@ -75,37 +76,10 @@ public class UsuarioController {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
     
-    @PostMapping("/login")
-    @ResponseBody
-    @ApiOperation(value = "Inicio de sesión para conseguir un token de acceso", response = UsuarioDTO.class, tags = "Seguridad")
-    public ResponseEntity<?> login(@Valid @RequestBody AuthenticationRequest authenticationRequest, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            return new ResponseEntity("La información no esta bien formada o no coincide con el formato esperado", HttpStatus.BAD_REQUEST);
-        }
-        try {
-            AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-            String token = usuarioService.login(authenticationRequest);
-            Optional<Usuario> usu = usuarioService.findByCedula(authenticationRequest.getCedula());
-          
-            UsuarioDTO usuario = MapperUtils.DtoFromEntity(usu.get(), UsuarioDTO.class);
-            System.out.println(usuario.getCedula());
-            if (!token.isBlank()) {
-                authenticationResponse.setJwt(token);
-                authenticationResponse.setUsuario(usuario);
-                //TODO: Complete this    authenticationResponse.setPermisos(permisosOtorgados);
-                return new ResponseEntity(authenticationResponse, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Credenciales invalidos", HttpStatus.UNAUTHORIZED);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    
+    @Autowired
+    private IAutenticacionService autenticacionService;
+        
     @PostMapping("/cambioContrasena") 
     @ResponseBody
     @ApiOperation(value = "Obtiene permiso para cambiar de contraseña", response = UsuarioDTO.class, tags = "Usuarios")
@@ -116,13 +90,9 @@ public class UsuarioController {
         }
         try {
             AuthenticationResponse authenticationResponse = new AuthenticationResponse();
-            String token = usuarioService.login(authenticationRequest);
-            Optional<Usuario> usu = usuarioService.findByCedula(authenticationRequest.getCedula());
-          
-            UsuarioDTO usuario = MapperUtils.DtoFromEntity(usu.get(), UsuarioDTO.class);
-            if (!token.isBlank()) {
-                
-                return new ResponseEntity<>(usuario, HttpStatus.OK);
+            authenticationResponse = autenticacionService.login(authenticationRequest);
+            if (authenticationResponse!=null) {
+                return new ResponseEntity(authenticationResponse, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Credenciales invalidos", HttpStatus.UNAUTHORIZED);
             }
