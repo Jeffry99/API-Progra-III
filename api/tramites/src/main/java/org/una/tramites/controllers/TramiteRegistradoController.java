@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ public class TramiteRegistradoController {
 
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los tramites registrados", response = TramiteRegistradoDTO.class, responseContainer = "List", tags = "Tramites_Registrados")
+    @PreAuthorize("hasAuthority('TRU06')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -58,6 +60,7 @@ public class TramiteRegistradoController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene un tramite registrado a traves de su identificador unico", response = TramiteRegistradoDTO.class, tags = "Tramites_Registrados")
+    @PreAuthorize("hasAuthority('TRU05')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -77,6 +80,7 @@ public class TramiteRegistradoController {
     @PostMapping("/")
     @ApiOperation(value = "Crea un tramite registrado", response = HttpStatus.class, tags = "Tramites_Registrados")
     @ResponseBody
+    @PreAuthorize("hasAuthority('TRU01')")
     public ResponseEntity<?> create(@RequestBody TramiteRegistrado tramites) {
         try {
             TramiteRegistrado tramitesCreated = tramitesRegistradosService.create(tramites);
@@ -90,6 +94,7 @@ public class TramiteRegistradoController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica un tramite registrado", response = HttpStatus.class, tags = "Tramites_Registrados")
     @ResponseBody
+    @PreAuthorize("hasAuthority('TRU02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody TramiteRegistrado tramitesModified) {
         try {
             Optional<TramiteRegistrado> tramitesUpdated = tramitesRegistradosService.update(tramitesModified, id);
@@ -108,6 +113,7 @@ public class TramiteRegistradoController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina un tramite registrado", response = HttpStatus.class, tags = "Tramites_Registrados")
+    @PreAuthorize("hasAuthority('TRU03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             tramitesRegistradosService.delete(id);
@@ -122,6 +128,7 @@ public class TramiteRegistradoController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todos los tramites registrados", response = HttpStatus.class, tags = "Tramites_Registrados")
+    @PreAuthorize("hasAuthority('TRU03')")
     public ResponseEntity<?> deleteAll() {
         try {
             tramitesRegistradosService.deleteAll();

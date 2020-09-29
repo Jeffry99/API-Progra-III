@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ public class NotaController {
 
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos las notas", response = NotaDTO.class, responseContainer = "List", tags = "Notas")
+    @PreAuthorize("hasAuthority('USU04')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -57,6 +59,7 @@ public class NotaController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene una notas a traves de su identificador unico", response = NotaDTO.class, tags = "Notas")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -76,6 +79,7 @@ public class NotaController {
     @PostMapping("/")
     @ApiOperation(value = "Crea una nota", response = HttpStatus.class, tags = "Notas")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU01')")
     public ResponseEntity<?> create(@RequestBody Nota notas) {
         try {
             Nota notasCreated = notasService.create(notas);
@@ -89,6 +93,7 @@ public class NotaController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica una nota", response = HttpStatus.class, tags = "Notas")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Nota notasModified) {
         try {
             Optional<Nota> notasUpdated = notasService.update(notasModified, id);
@@ -104,6 +109,7 @@ public class NotaController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina una nota", response = HttpStatus.class, tags = "Notas")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             notasService.delete(id);
@@ -118,6 +124,7 @@ public class NotaController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todas las notas", response = HttpStatus.class, tags = "Notas")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> deleteAll() {
         try {
             notasService.deleteAll();
@@ -132,6 +139,7 @@ public class NotaController {
 
     @GetMapping("/{titulo}")
     @ApiOperation(value = "Obtiene una nota a traves de su titulo", response = NotaDTO.class, tags = "Notas")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByTitulo(@PathVariable(value = "titulo") String titulo) {
         try {
 

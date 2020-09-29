@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +45,7 @@ public class DepartamentoController {
     
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los departamentos", response = DepartamentoDTO.class, responseContainer = "List", tags = "Departamentos")
+    @PreAuthorize("hasAuthority('DEP04')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -61,6 +63,7 @@ public class DepartamentoController {
     
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene un departamento a traves de su identificador unico", response = DepartamentoDTO.class, tags = "Departamentos")
+    @PreAuthorize("hasAuthority('DEP04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -81,6 +84,7 @@ public class DepartamentoController {
     @PostMapping("/crear") 
     @ApiOperation(value = "Crea un departamento", response = DepartamentoDTO.class, tags = "Departamentos")
     @ResponseBody
+    @PreAuthorize("hasAuthority('DEP01')")
     public ResponseEntity<?> create(@RequestBody Departamento departamento) {
         try {
             Departamento departamentoCreated = departamentoService.create(departamento);
@@ -95,6 +99,7 @@ public class DepartamentoController {
     @PutMapping("/{id}") 
     @ApiOperation(value = "Modifica un departamento", response = DepartamentoDTO.class, tags = "Departamentos")
     @ResponseBody
+    @PreAuthorize("hasAuthority('DEP02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Departamento usuarioModified) {
         try {
             Optional<Departamento> departamentoUpdated = departamentoService.update(usuarioModified, id);
@@ -114,6 +119,7 @@ public class DepartamentoController {
     
     @GetMapping("/estado/{estado}") 
     @ApiOperation(value = "Obtiene una lista de departamentos por estado", response = DepartamentoDTO.class, responseContainer = "List", tags = "Departamentos")
+    @PreAuthorize("hasAuthority('DEP04')")
     public ResponseEntity<?> findByEstado(@PathVariable(value = "estado") boolean estado) {
         try {
             Optional<List<Departamento>> result = departamentoService.findByEstado(estado);
@@ -130,6 +136,7 @@ public class DepartamentoController {
     
     @GetMapping("/nombre/{nombre}") 
     @ApiOperation(value = "Obtiene una lista de departamentos por nombre", response = DepartamentoDTO.class, responseContainer = "List", tags = "Departamentos")
+    @PreAuthorize("hasAuthority('DEP04')")
     public ResponseEntity<?> findByNombreAproximateIgnoreCase(@PathVariable(value = "nombre") String nombre) {
         try {
             Optional<List<Departamento>> result = departamentoService.findByNombreAproximateIgnoreCase(nombre);
@@ -147,6 +154,7 @@ public class DepartamentoController {
 
     @DeleteMapping("/{id}") 
     @ApiOperation(value = "Elimina un departamento", response = HttpStatus.class, tags = "Departamentos")
+    @PreAuthorize("hasAuthority('DEP03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         //TODO: Implementar este método
         try{
@@ -162,6 +170,7 @@ public class DepartamentoController {
 
     @DeleteMapping("/") 
     @ApiOperation(value = "Elimina todos los departamentos", response = HttpStatus.class, tags = "Departamentos")
+    @PreAuthorize("hasAuthority('DEP03')")
     public ResponseEntity<?> deleteAll() {
  	//TODO: Implementar este método
         try{

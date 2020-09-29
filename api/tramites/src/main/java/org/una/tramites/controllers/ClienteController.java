@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,7 @@ public class ClienteController {
     
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los Clientes", response = ClienteDTO.class, responseContainer = "List", tags = "Clientes")
+    @PreAuthorize("hasAuthority('USU04')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -57,6 +59,7 @@ public class ClienteController {
     
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene un cliente a traves de su identificador unico", response = ClienteDTO.class, tags = "Clientes")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -74,6 +77,7 @@ public class ClienteController {
     
     @GetMapping("/cedula/{term}")
     @ApiOperation(value = "Obtiene una lista de clientes por cedula", response = ClienteDTO.class, responseContainer = "List", tags = "Clientes")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByCedulaAproximate(@PathVariable(value = "term") String term) {
         try {
             Optional<List<Cliente>> result = clienteService.findByCedulaAproximate(term);
@@ -90,6 +94,7 @@ public class ClienteController {
     
     @GetMapping("/nombre/{term}")
     @ApiOperation(value = "Obtiene una lista clientes por nombre completo", response = ClienteDTO.class, responseContainer = "List", tags = "Clientes")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByNombreCompletoAproximateIgnoreCase(@PathVariable(value = "term") String term) {
         try {
             Optional<List<Cliente>> result = clienteService.findByNombreCompletoAproximateIgnoreCase(term);
@@ -108,6 +113,7 @@ public class ClienteController {
     @PostMapping("/")
     @ApiOperation(value = "Crea un cliente", response = HttpStatus.class, tags = "Clientes")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU01')")
     public ResponseEntity<?> create(@RequestBody Cliente cliente) {
         try {
             Cliente clienteCreated = clienteService.create(cliente);
@@ -121,6 +127,7 @@ public class ClienteController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica un cliente", response = HttpStatus.class, tags = "Clientes")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Cliente clienteModified) {
         try {
             Optional<Cliente> clienteUpdated = clienteService.update(clienteModified, id);
@@ -139,6 +146,7 @@ public class ClienteController {
     
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina un cliente", response = HttpStatus.class, tags = "Clientes")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             clienteService.delete(id);
@@ -153,6 +161,7 @@ public class ClienteController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todos los clientes", response = HttpStatus.class, tags = "Clientes")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> deleteAll() {
         try {
             clienteService.deleteAll();

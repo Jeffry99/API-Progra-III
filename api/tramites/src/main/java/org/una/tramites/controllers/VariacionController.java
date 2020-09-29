@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ public class VariacionController {
     
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos las Variaciones", response = VariacionDTO.class, responseContainer = "List", tags = "Variaciones")
+    @PreAuthorize("hasAuthority('TRA06')")
     public @ResponseBody ResponseEntity<?> findAll(){
         try{
             Optional<List<Variacion>> result = varService.findAll();
@@ -56,6 +58,7 @@ public class VariacionController {
     
     @GetMapping("/tipostramites/{id}")
     @ApiOperation(value = "Obtiene una lista de variaciones por su tramite", response = VariacionDTO.class, responseContainer = "List", tags = "Variaciones")
+   @PreAuthorize("hasAuthority('TRA05')")
     public @ResponseBody ResponseEntity<?> findByTramiteTipo(@PathVariable(value = "id") Long id){
         try{
             Optional<List<Variacion>> result = varService.findByTramitesTipos(id);
@@ -71,6 +74,7 @@ public class VariacionController {
     
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene una variacion a traves de su identificador unico", response = VariacionDTO.class, tags = "Variaciones")
+    @PreAuthorize("hasAuthority('TRA05')")    
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -90,6 +94,7 @@ public class VariacionController {
     @PostMapping("/")
     @ApiOperation(value = "Crea una variacion", response = HttpStatus.class, tags = "Variaciones")
     @ResponseBody
+   @PreAuthorize("hasAuthority('TRD01')")
     public ResponseEntity<?> create(@RequestBody Variacion variacion) {
         try {
             Variacion varCreated = varService.create(variacion);
@@ -103,6 +108,7 @@ public class VariacionController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica una variacion", response = HttpStatus.class, tags = "Variaciones")
     @ResponseBody
+    @PreAuthorize("hasAuthority('TRD02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Variacion varModified) {
         try {
             Optional<Variacion> varUpdated = varService.update(varModified, id);
@@ -118,6 +124,7 @@ public class VariacionController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina una variacion", response = HttpStatus.class, tags = "Variaciones")
+    @PreAuthorize("hasAuthority('TRA03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             varService.delete(id);
@@ -132,6 +139,7 @@ public class VariacionController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todas las variaciones", response = HttpStatus.class, tags = "Variaciones")
+    @PreAuthorize("hasAuthority('TRA03')")
     public ResponseEntity<?> deleteAll() {
         try {
             varService.deleteAll();
@@ -145,6 +153,8 @@ public class VariacionController {
     }
     
     @GetMapping("/{grupo}")
+    @ApiOperation(value = "Obtiene una lista de las variaciones por medio de su grupo", response = VariacionDTO.class, responseContainer = "List", tags = "Variaciones")
+    @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findByGrupo(@PathVariable(value = "grupo")String codigo){
         try{
             Optional<List<Variacion>> result = varService.findByGrupo(codigo);
@@ -159,6 +169,8 @@ public class VariacionController {
     }
     
     @GetMapping("/{descripcion}")
+    @ApiOperation(value = "Obtiene una lista de las variaciones por medio de su descripcion", response = VariacionDTO.class, responseContainer = "List", tags = "Variaciones")
+    @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion")String descripcion){
         try{
             Optional<List<Variacion>> result = varService.findByDescripcion(descripcion);

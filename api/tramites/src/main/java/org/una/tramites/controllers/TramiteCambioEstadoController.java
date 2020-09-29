@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ public class TramiteCambioEstadoController {
 
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los tramites cambio estado", response = TramiteCambioEstadoDTO.class, responseContainer = "List", tags = "Tramites_Cambio_Estado")
+    @PreAuthorize("hasAuthority('TRU06')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -58,6 +60,7 @@ public class TramiteCambioEstadoController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene un tramite cambio estado a traves de su identificador unico", response = TramiteCambioEstadoDTO.class, tags = "Tramites_Cambio_Estado")
+    @PreAuthorize("hasAuthority('TRU05')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -77,6 +80,7 @@ public class TramiteCambioEstadoController {
     @PostMapping("/")
     @ApiOperation(value = "Crea un tramite cambio estado", response = HttpStatus.class, tags = "Tramites_Cambio_Estado")
     @ResponseBody
+    @PreAuthorize("hasAuthority('TRU01')")
     public ResponseEntity<?> create(@RequestBody TramiteCambioEstado tramites) {
         try {
             TramiteCambioEstado tramitesCreated = tramiteService.create(tramites);
@@ -90,6 +94,7 @@ public class TramiteCambioEstadoController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica un tramite cambio estado", response = HttpStatus.class, tags = "Tramites_Cambio_Estado")
     @ResponseBody
+    @PreAuthorize("hasAuthority('TRU02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody TramiteCambioEstado tramitesModified) {
         try {
             Optional <TramiteCambioEstado> tramitesUpdated = tramiteService.update(tramitesModified, id);
@@ -108,6 +113,7 @@ public class TramiteCambioEstadoController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina un tramite cambio estado", response = HttpStatus.class, tags = "Tramites_Cambio_Estado")
+    @PreAuthorize("hasAuthority('TRU03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             tramiteService.delete(id);
@@ -122,6 +128,7 @@ public class TramiteCambioEstadoController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todos los tramites cambio estados", response = HttpStatus.class, tags = "Tramites_Cambio_Estado")
+    @PreAuthorize("hasAuthority('TRU03')")
     public ResponseEntity<?> deleteAll() {
         try {
             tramiteService.deleteAll();

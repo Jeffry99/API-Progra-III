@@ -191,19 +191,37 @@ public class UsuarioServiceImplementation implements IUsuarioService, UserDetail
         return usuarioRepository.findByCedula(cedula);
     }
 
-    @Override
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        Optional<Usuario> usuarioBuscado = usuarioRepository.findByCedula(username);
+//        if (usuarioBuscado.isPresent()) {
+//            Usuario usuario = usuarioBuscado.get();
+//            List<GrantedAuthority> roles = new ArrayList<>();
+//            roles.add(new SimpleGrantedAuthority("ADMIN"));
+//            UserDetails userDetails = new User(usuario.getCedula(), usuario.getPasswordEncriptado(), roles);
+//            return userDetails;
+//        } else {
+//            return null;
+//        }
+//
+//    }
+     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        //Optional<Usuario> usuarioBuscado = Optional.ofNullable(usuarioRepository.findByCedula(username));
         Optional<Usuario> usuarioBuscado = usuarioRepository.findByCedula(username);
         if (usuarioBuscado.isPresent()) {
             Usuario usuario = usuarioBuscado.get();
             List<GrantedAuthority> roles = new ArrayList<>();
-            roles.add(new SimpleGrantedAuthority("ADMIN"));
+
+            usuario.getPermisosOtorgados().forEach(permisoOtorgado -> {
+                roles.add(new SimpleGrantedAuthority(permisoOtorgado.getPermiso().getCodigo()));
+            });
             UserDetails userDetails = new User(usuario.getCedula(), usuario.getPasswordEncriptado(), roles);
             return userDetails;
         } else {
             return null;
         }
-
     }
 
     

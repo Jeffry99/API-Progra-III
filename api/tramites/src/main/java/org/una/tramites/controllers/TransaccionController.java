@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,7 @@ public class TransaccionController {
 
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todas las transacciones", response = TransaccionDTO.class, responseContainer = "List", tags = "Transacciones")
+    @PreAuthorize("hasAuthority('TRU06')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -56,6 +58,7 @@ public class TransaccionController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene una transaccion a traves de su identificador unico", response = TransaccionDTO.class, tags = "Transacciones")
+    @PreAuthorize("hasAuthority('TRU05')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
             Optional<Transaccion> transaccionFound = transaccionService.findById(id);
@@ -74,6 +77,7 @@ public class TransaccionController {
     @PostMapping("/")
     @ApiOperation(value = "Crea una transaccion", response = HttpStatus.class, tags = "Transacciones")
     @ResponseBody
+    @PreAuthorize("hasAuthority('TRU01')")
     public ResponseEntity<?> create(@RequestBody Transaccion tran) {
         try {
             Transaccion tranCreated = transaccionService.create(tran);
@@ -87,6 +91,7 @@ public class TransaccionController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica una transaccion", response = HttpStatus.class, tags = "Transacciones")
     @ResponseBody
+    @PreAuthorize("hasAuthority('TRU02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Transaccion tranModified) {
         try {
             Optional<Transaccion> tranUpdated = transaccionService.update(tranModified, id);
@@ -103,6 +108,7 @@ public class TransaccionController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina una transaccion", response = HttpStatus.class, tags = "Transacciones")
+    @PreAuthorize("hasAuthority('TRU03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             transaccionService.delete(id);
@@ -117,6 +123,7 @@ public class TransaccionController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todas las transacciones", response = HttpStatus.class, tags = "Transacciones")
+    @PreAuthorize("hasAuthority('TRU03')")
     public ResponseEntity<?> deleteAll() {
         try {
             transaccionService.deleteAll();

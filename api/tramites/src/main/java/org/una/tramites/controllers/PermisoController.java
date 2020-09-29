@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class PermisoController {
 
     @GetMapping("/")
     @ApiOperation(value = "Obtiene una lista de todos los permisos", response = PermisoDTO.class, responseContainer = "List", tags = "Permisos")
+    @PreAuthorize("hasAuthority('USU04')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -54,6 +56,7 @@ public class PermisoController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene un permiso por su identificador unico", response = PermisoDTO.class, tags = "Permisos")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
             Optional<Permiso> permisoFound = permisoService.findById(id);
@@ -69,6 +72,7 @@ public class PermisoController {
     }
     @GetMapping("/estado/{estado}") 
     @ApiOperation(value = "Obtiene una lista de permisos por estado", response = PermisoDTO.class, responseContainer = "List", tags = "Permisos")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByEstado(@PathVariable(value = "estado") boolean estado) {
         try {
             Optional<List<Permiso>> result = permisoService.findByEstado(estado);
@@ -86,6 +90,7 @@ public class PermisoController {
     @PostMapping("/")
     @ApiOperation(value = "Crea un permiso", response = HttpStatus.class, tags = "Permisos")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU01')")
     public ResponseEntity<?> create(@RequestBody Permiso per) {
         try {
             Permiso perCreated = permisoService.create(per);
@@ -99,6 +104,7 @@ public class PermisoController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica un permiso", response = HttpStatus.class, tags = "Permisos")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Permiso perModified) {
         try {
             Optional<Permiso> perUpdated = permisoService.update(perModified, id);
@@ -115,6 +121,7 @@ public class PermisoController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina un permiso", response = HttpStatus.class, tags = "Permisos")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             permisoService.delete(id);
@@ -129,6 +136,7 @@ public class PermisoController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todos los permisos", response = HttpStatus.class, tags = "Permisos")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> deleteAll() {
         try {
             permisoService.deleteAll();

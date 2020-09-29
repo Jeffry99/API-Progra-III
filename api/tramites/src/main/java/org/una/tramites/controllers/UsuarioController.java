@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +46,7 @@ public class UsuarioController {
 
     @GetMapping() 
     @ApiOperation(value = "Obtiene una lista de todos los Usuarios", response = UsuarioDTO.class, responseContainer = "List", tags = "Usuarios")
+    @PreAuthorize("hasAuthority('USU04')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -62,6 +64,7 @@ public class UsuarioController {
 
     @GetMapping("/{id}") 
     @ApiOperation(value = "Obtiene un usuario por su id", response = UsuarioDTO.class, tags = "Usuarios")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -83,6 +86,7 @@ public class UsuarioController {
     @PostMapping("/cambioContrasena") 
     @ResponseBody
     @ApiOperation(value = "Obtiene permiso para cambiar de contraseña", response = UsuarioDTO.class, tags = "Usuarios")
+    @PreAuthorize("hasAuthority('USU02')")
     public ResponseEntity<?> solicitarCambioContrasena(@Valid @RequestBody AuthenticationRequest authenticationRequest, BindingResult bindingResult) {
         
         if (bindingResult.hasErrors()) {
@@ -104,6 +108,7 @@ public class UsuarioController {
 
     @GetMapping("/cedula/{term}") 
     @ApiOperation(value = "Obtiene una lista de usuarios por cedula", response = UsuarioDTO.class, responseContainer = "List", tags = "Usuarios")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByCedulaAproximate(@PathVariable(value = "term") String term) {
         try {
             Optional<List<Usuario>> result = usuarioService.findByCedulaAproximate(term);
@@ -119,6 +124,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/nombre/{term}") 
+    @PreAuthorize("hasAuthority('USU04')")
     @ApiOperation(value = "Obtiene una lista de usuarios por nombre completo", response = UsuarioDTO.class, responseContainer = "List", tags = "Usuarios")
     public ResponseEntity<?> findByNombreCompletoAproximateIgnoreCase(@PathVariable(value = "term") String term) {
         try {
@@ -136,6 +142,7 @@ public class UsuarioController {
     
     @GetMapping("/departamento/{term}") 
     @ApiOperation(value = "Obtiene una lista de usuarios por departamento", response = UsuarioDTO.class, responseContainer = "List", tags = "Usuarios")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByDepartamentoId(@PathVariable(value = "term") Long term) {
         try {
             Optional<List<Usuario>> result = usuarioService.findByDepartamentoId(term);
@@ -151,12 +158,9 @@ public class UsuarioController {
     }
     
     
-    
-    
-    
-    
     @GetMapping("/jefedepartamento/{id}") 
     @ApiOperation(value = "Obtiene un usuario jefe por departamento", response = UsuarioDTO.class, tags = "Usuarios")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findJefeByDepartamento(@PathVariable(value = "id") Long id) {
         try {
 
@@ -173,14 +177,11 @@ public class UsuarioController {
     }
     
     
-    
-    
-    
-
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/") 
     @ApiOperation(value = "Crea un usuario", response = UsuarioDTO.class, tags = "Usuarios")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU01')")
     public ResponseEntity<?> create(@RequestBody Usuario usuario) {
         try {
             Usuario usuarioCreated = usuarioService.create(usuario);
@@ -194,6 +195,7 @@ public class UsuarioController {
     @PutMapping("/cambiarContrasena/{id}") 
     @ApiOperation(value = "Cambia contrasena de un usuario", response = UsuarioDTO.class, tags = "Usuarios")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU02')")
     public ResponseEntity<?> cambiarContrasena(@PathVariable(value = "id") Long id, @RequestBody Usuario usuarioModified) {
         try {
             Optional<Usuario> usuarioUpdated = usuarioService.cambioContrasena(usuarioModified, id);
@@ -210,13 +212,10 @@ public class UsuarioController {
         }
     }
     
-    
-    
-    
-
     @PutMapping("/{id}") 
     @ApiOperation(value = "Modifica un usuario", response = UsuarioDTO.class, tags = "Usuarios")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Usuario usuarioModified) {
         try {
             Optional<Usuario> usuarioUpdated = usuarioService.update(usuarioModified, id);
@@ -235,6 +234,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}") 
     @ApiOperation(value = "Elimina un usuario", response = HttpStatus.class, tags = "Usuarios")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         //TODO: Implementar este método
         try{
@@ -250,6 +250,7 @@ public class UsuarioController {
 
     @DeleteMapping("/") 
     @ApiOperation(value = "Elimina todos los usuarios", response = HttpStatus.class, tags = "Usuarios")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> deleteAll() {
  	//TODO: Implementar este método
         try{

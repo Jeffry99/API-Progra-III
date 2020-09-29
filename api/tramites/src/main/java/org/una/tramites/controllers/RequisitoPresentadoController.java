@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +41,7 @@ public class RequisitoPresentadoController {
     
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene un requisito presentado a traves de su identificador unico", response = RequisitoPresentadoDTO.class, tags = "Requisitos_Presentados")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
             Optional<RequisitoPresentado> repPresentadoFound = requisitoPresentadoService.findById(id);
@@ -56,6 +58,7 @@ public class RequisitoPresentadoController {
     
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los requisitos presentados", response = RequisitoPresentadoDTO.class, responseContainer = "List", tags = "Requisitos_Presentados")
+    @PreAuthorize("hasAuthority('USU04')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -73,6 +76,7 @@ public class RequisitoPresentadoController {
     
     @GetMapping("tramite_registrado/{id}")
     @ApiOperation(value = "Obtiene los requisitos presentados del tramite registrado", response = RequisitoPresentadoDTO.class, responseContainer = "List", tags = "Requisitos_Presentados")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByTramiteRegistrado(@PathVariable(value = "id")Long  id) {
         try{
             Optional<List<RequisitoPresentado>> result = requisitoPresentadoService.findByTramiteRegistrado(id);
@@ -90,6 +94,7 @@ public class RequisitoPresentadoController {
     @PostMapping("/")
     @ApiOperation(value = "Crea un requisito presentado", response = HttpStatus.class, tags = "Requisitos_Presentados")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU01')")
     public ResponseEntity<?> create(@RequestBody RequisitoPresentado reqPresentado) {
         try {
             RequisitoPresentado reqPresentadoCreated = requisitoPresentadoService.create(reqPresentado);
@@ -103,6 +108,7 @@ public class RequisitoPresentadoController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica un requisito presentado", response = HttpStatus.class, tags = "Requisitos_Presentados")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody RequisitoPresentado reqPresentadoModified) {
         try {
             Optional<RequisitoPresentado> reqPresentadoUpdated = requisitoPresentadoService.update(reqPresentadoModified, id);
@@ -119,6 +125,7 @@ public class RequisitoPresentadoController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina un requisito presentado", response = HttpStatus.class, tags = "Requisitos_Presentados")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             requisitoPresentadoService.delete(id);
@@ -133,6 +140,7 @@ public class RequisitoPresentadoController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todos los requisitos presentados", response = HttpStatus.class, tags = "Requisitos_Presentados")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> deleteAll() {
         try {
             requisitoPresentadoService.deleteAll();

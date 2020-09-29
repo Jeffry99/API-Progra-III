@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,6 +42,7 @@ public class RequisitoController {
  
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los Requisitos", response = RequisitoDTO.class, responseContainer = "List", tags = "Requisitos")
+    @PreAuthorize("hasAuthority('TRA06')")
     public @ResponseBody ResponseEntity<?> findAll(){
         try{
             Optional<List<Requisito>> result = reqService.findAll();
@@ -56,6 +58,7 @@ public class RequisitoController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene un requisito a traves de su identificador unico", response = RequisitoDTO.class,  tags = "Requisitos")
+    @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -73,6 +76,7 @@ public class RequisitoController {
     
     @GetMapping("/variacion/{id}")
     @ApiOperation(value = "Obtiene una lista de requisitos a traves de su variacion", response = RequisitoDTO.class, responseContainer = "List", tags = "Requisitos")
+    @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findByVariacionId(@PathVariable(value = "id") Long id) {
         try {
 
@@ -92,6 +96,7 @@ public class RequisitoController {
     @PostMapping("/")
     @ApiOperation(value = "Crea un requisito", response = HttpStatus.class, tags = "Requisitos")
     @ResponseBody
+    @PreAuthorize("hasAuthority('TRA01')")
     public ResponseEntity<?> create(@RequestBody Requisito variacion) {
         try {
             Requisito varCreated = reqService.create(variacion);
@@ -105,6 +110,7 @@ public class RequisitoController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica un requisito", response = HttpStatus.class, tags = "Requisitos")
     @ResponseBody
+    @PreAuthorize("hasAuthority('TRA02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Requisito varModified) {
         try {
             Optional<Requisito> varUpdated = reqService.update(varModified, id);
@@ -120,6 +126,7 @@ public class RequisitoController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina un requisito", response = HttpStatus.class, tags = "Requisitos")
+    @PreAuthorize("hasAuthority('TRA03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             reqService.delete(id);
@@ -134,6 +141,7 @@ public class RequisitoController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todos los requisitos", response = HttpStatus.class, tags = "Requisitos")
+    @PreAuthorize("hasAuthority('TRA03')")
     public ResponseEntity<?> deleteAll() {
         try {
             reqService.deleteAll();
@@ -148,6 +156,7 @@ public class RequisitoController {
 
     @GetMapping("/pordescripcion/{descripcion}")
     @ApiOperation(value = "Obtiene una lista de requisitos por su descripcion", response = RequisitoDTO.class, responseContainer = "List", tags = "Requisitos")
+    @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion")String descripcion){
         try{
             Optional<List<Requisito>> result = reqService.findByDescripcion(descripcion);

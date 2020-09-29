@@ -12,6 +12,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,6 +44,7 @@ public class ParametrosGeneralesController {
     
     @GetMapping("/pornombre/{nombre}")
     @ApiOperation(value = "Obtiene los paremetros generales segun el nombre", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByNombre(@PathVariable(value = "nombre")String nombre) {
         try{
             Optional<List<ParametrosGenerales>> result = paramGenService.findByNombre(nombre);
@@ -58,6 +60,7 @@ public class ParametrosGeneralesController {
     
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene un parametro general por su identificador unico", response = ParametrosGeneralesDTO.class, tags = "Parametros_Generales")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
             Optional<ParametrosGenerales> permisoFound = paramGenService.findById(id);
@@ -74,6 +77,7 @@ public class ParametrosGeneralesController {
     
     @GetMapping("/porvalor/{valor}")
     @ApiOperation(value = "Obtiene una lista de Parametros Generales segun el valor que guardan", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByValor(@PathVariable(value = "valor") String valor){
         try{
             Optional<List<ParametrosGenerales>> result = paramGenService.findByValor(valor);
@@ -88,6 +92,7 @@ public class ParametrosGeneralesController {
     }
     @GetMapping("/pordescripcion/{descripcion}")
     @ApiOperation(value = "Obtiene una lista de Parametros Generales segun su descripcion", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion")String descripcion){
         try{
             Optional<List<ParametrosGenerales>> result = paramGenService.findByDescripcion(descripcion);
@@ -104,6 +109,7 @@ public class ParametrosGeneralesController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica un parametro general", response = HttpStatus.class, tags = "Parametros_Generales")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody ParametrosGenerales parGen) {
         try {
             Optional<ParametrosGenerales> parGenUpdate = paramGenService.update(parGen, id);
@@ -119,6 +125,7 @@ public class ParametrosGeneralesController {
     
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los parametros generales", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
+    @PreAuthorize("hasAuthority('USU04')")
     public @ResponseBody ResponseEntity<?> findAll() {
         try {
             Optional<List<ParametrosGenerales>> result = paramGenService.findAll();
@@ -134,6 +141,7 @@ public class ParametrosGeneralesController {
     
     @GetMapping("/porestado/{estado}") 
     @ApiOperation(value = "Obtiene una lista de parametros generales por estado", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
+    @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByEstado(@PathVariable(value = "estado") boolean estado) {
         try {
             Optional<List<ParametrosGenerales>> result = paramGenService.findByEstado(estado);
@@ -152,6 +160,7 @@ public class ParametrosGeneralesController {
     @PostMapping("/")
     @ApiOperation(value = "Crea un parametro general", response = HttpStatus.class, tags = "Parametros_Generales")
     @ResponseBody
+    @PreAuthorize("hasAuthority('USU01')")
     public ResponseEntity<?> create(@RequestBody ParametrosGenerales pg) {
         try {
             ParametrosGenerales pgCreated = paramGenService.create(pg);
@@ -165,6 +174,7 @@ public class ParametrosGeneralesController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina un parametro general", response = HttpStatus.class, tags = "Parametros_Generales")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             paramGenService.delete(id);
@@ -179,6 +189,7 @@ public class ParametrosGeneralesController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todos los permisos", response = HttpStatus.class, tags = "Parametros_Generales")
+    @PreAuthorize("hasAuthority('USU03')")
     public ResponseEntity<?> deleteAll() {
         try {
             paramGenService.deleteAll();
