@@ -11,11 +11,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.una.tramites.dto.ArchivoRelacionadoDTO;
 import org.una.tramites.entities.ArchivoRelacionado;
 import org.una.tramites.repositories.IArchivoRelacionadoRepository;
-import org.una.tramites.utils.MapperUtils;
-import org.una.tramites.utils.ServiceConvertionHelper;
 
 /**
  *
@@ -29,46 +26,41 @@ public class ArchivoRelacionadoServiceImplementation implements IArchivoRelacion
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<ArchivoRelacionadoDTO> findById(Long id) {
-        return ServiceConvertionHelper.oneToOptionalDto(archivoRelacionadoRepository.findById(id),ArchivoRelacionadoDTO.class);
+    public Optional<ArchivoRelacionado> findById(Long id) {
+        return archivoRelacionadoRepository.findById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<ArchivoRelacionadoDTO>> findAll() {
-        return ServiceConvertionHelper.findList(archivoRelacionadoRepository.findAll(),ArchivoRelacionadoDTO.class);
+    public Optional<List<ArchivoRelacionado>> findAll() {
+        return Optional.ofNullable(archivoRelacionadoRepository.findAll());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<ArchivoRelacionadoDTO>> findByTramiteRegistrado(Long id) {
-        return ServiceConvertionHelper.findList(archivoRelacionadoRepository.findByTramitesRegistrados(id),ArchivoRelacionadoDTO.class);
+    public Optional<List<ArchivoRelacionado>> findByTramiteRegistrado(Long id) {
+        return Optional.ofNullable(archivoRelacionadoRepository.findByTramitesRegistrados(id));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<ArchivoRelacionadoDTO>> findByFechaRegistro(Date fechaRegistro) {
-        return ServiceConvertionHelper.findList(archivoRelacionadoRepository.findByFechaRegistro(fechaRegistro),ArchivoRelacionadoDTO.class);
+    public Optional<List<ArchivoRelacionado>> findByFechaRegistro(Date fechaRegistro) {
+        return Optional.ofNullable(archivoRelacionadoRepository.findByFechaRegistro(fechaRegistro));
     }
 
     @Override
     @Transactional
-    public ArchivoRelacionadoDTO create(ArchivoRelacionadoDTO archivo) {
-        ArchivoRelacionado archiv = MapperUtils.EntityFromDto(archivo, ArchivoRelacionado.class);
-        archiv = archivoRelacionadoRepository.save(archiv);
-        return MapperUtils.DtoFromEntity(archiv, ArchivoRelacionadoDTO.class);
+    public ArchivoRelacionado create(ArchivoRelacionado archivoRelacionado) {
+        return archivoRelacionadoRepository.save(archivoRelacionado);
     }
 
     @Override
     @Transactional
-     public Optional<ArchivoRelacionadoDTO> update(ArchivoRelacionadoDTO archivo, Long id) {
-        if (archivoRelacionadoRepository.findById(id).isPresent()) {
-            ArchivoRelacionado archiv = MapperUtils.EntityFromDto(archivo, ArchivoRelacionado.class);
-            archiv = archivoRelacionadoRepository.save(archiv);
-            return Optional.ofNullable(MapperUtils.DtoFromEntity(archiv, ArchivoRelacionadoDTO.class));
-        } else {
+    public Optional<ArchivoRelacionado> update(ArchivoRelacionado ArchivoRelacionado, Long id) {
+        if(archivoRelacionadoRepository.findById(id).isPresent())
+            return Optional.ofNullable(archivoRelacionadoRepository.save(ArchivoRelacionado));
+        else
             return null;
-        } 
     }
 
     @Override

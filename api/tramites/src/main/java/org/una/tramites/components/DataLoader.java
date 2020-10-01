@@ -6,17 +6,12 @@
 package org.una.tramites.components;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import org.una.tramites.dto.PermisoDTO;
-import org.una.tramites.dto.PermisoOtorgadoDTO;
-import org.una.tramites.dto.UsuarioDTO;
 import org.una.tramites.entities.Permiso;
 import org.una.tramites.entities.PermisoOtorgado;
 import org.una.tramites.entities.Usuario;
@@ -51,50 +46,31 @@ public class DataLoader implements ApplicationRunner  {
         
         if (usuarioService.findByCedula(cedula).isEmpty()) {
 
-//            Permiso permiso;
-//            final String codigo = "Usu01"; 
-//            Optional<Permiso> permisoBuscado = permisoService.findByCodigo(codigo);
-//
-//            if (permisoBuscado.isEmpty()) { 
-//                permiso = new Permiso();
-//                permiso.setCodigo(codigo);
-//                permiso.setDescripcion("Registrar usuario nuevo");
-//                permiso = permisoService.create(permiso);
-//                //createPermisos();
-//                
-//            } else {
-//                permiso = permisoBuscado.get();
-//            }
-//            
-//            Usuario usuario = new Usuario();
-//            usuario.setNombreCompleto("Usuario Admin");
-//            usuario.setCedula(cedula);
-//            usuario.setPasswordEncriptado(password);
-//            usuario = usuarioService.create(usuario);
-//
-//            PermisoOtorgado permisoOtorgado = new PermisoOtorgado();
-//            permisoOtorgado.setPermiso(permiso);
-//            permisoOtorgado.setUsuario(usuario);
-//            permisoOtorgadoService.create(permisoOtorgado);
-            createPermisos();
-            PermisoDTO per;
-            UsuarioDTO usuario = new UsuarioDTO();
-            List<PermisoOtorgadoDTO> po = new ArrayList<>();
-            PermisoOtorgadoDTO perotor;
-            for(Permisos permiso : Permisos.values()){
-                per = permisoService.findByCodigo(permiso.getCodigo()).get();
-                perotor = new PermisoOtorgadoDTO();
-                perotor.setPermiso(per);
-                po.add(perotor);
+            Permiso permiso;
+            final String codigo = "Usu01"; 
+            Optional<Permiso> permisoBuscado = permisoService.findByCodigo(codigo);
+
+            if (permisoBuscado.isEmpty()) { 
+                permiso = new Permiso();
+                permiso.setCodigo(codigo);
+                permiso.setDescripcion("Registrar usuario nuevo");
+                permiso = permisoService.create(permiso);
+                //createPermisos();
+                
+            } else {
+                permiso = permisoBuscado.get();
             }
+            
+            Usuario usuario = new Usuario();
+            usuario.setNombreCompleto("Usuario Admin");
             usuario.setCedula(cedula);
             usuario.setPasswordEncriptado(password);
-            usuario.setNombreCompleto("Usuario Administrador");
             usuario = usuarioService.create(usuario);
-            for(PermisoOtorgadoDTO permiso :  po){
-                permisoOtorgadoService.create(permiso, usuario.getId());
-            }
 
+            PermisoOtorgado permisoOtorgado = new PermisoOtorgado();
+            permisoOtorgado.setPermiso(permiso);
+            permisoOtorgado.setUsuario(usuario);
+            permisoOtorgadoService.create(permisoOtorgado);
 
             System.out.println("Se agrega el usuario inicial");
         } else {
@@ -103,12 +79,11 @@ public class DataLoader implements ApplicationRunner  {
 
     }
     
-    private void createPermisos() {
+        private void createPermisos() {
         for (Permisos permiso : Permisos.values()) {
-            PermisoDTO nuevoPermiso = new PermisoDTO();
+            Permiso nuevoPermiso = new Permiso();
             nuevoPermiso.setCodigo(permiso.getCodigo());
             nuevoPermiso.setDescripcion(permiso.name());
-            if(permisoService.findByCodigo(permiso.getCodigo()) == null)
             permisoService.create(nuevoPermiso);
         } 
     }

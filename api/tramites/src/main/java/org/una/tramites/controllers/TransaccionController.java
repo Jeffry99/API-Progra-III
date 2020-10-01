@@ -44,7 +44,13 @@ public class TransaccionController {
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
-            return new ResponseEntity<>(transaccionService.findAll(), HttpStatus.OK);
+            Optional<List<Transaccion>> result = transaccionService.findAll();
+            if (result.isPresent()) {
+                List<TransaccionDTO> transaccionDTO = MapperUtils.DtoListFromEntityList(result.get(), TransaccionDTO.class);
+                return new ResponseEntity<>(transaccionDTO, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -55,7 +61,13 @@ public class TransaccionController {
     @PreAuthorize("hasAuthority('TRU05')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
-            return new ResponseEntity<>(transaccionService.findById(id), HttpStatus.OK);
+            Optional<Transaccion> transaccionFound = transaccionService.findById(id);
+            if (transaccionFound.isPresent()) {
+                TransaccionDTO tranDto = MapperUtils.DtoFromEntity(transaccionFound.get(), TransaccionDTO.class);
+                return new ResponseEntity<>(tranDto, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -66,9 +78,11 @@ public class TransaccionController {
     @ApiOperation(value = "Crea una transaccion", response = HttpStatus.class, tags = "Transacciones")
     @ResponseBody
     @PreAuthorize("hasAuthority('TRU01')")
-    public ResponseEntity<?> create(@RequestBody TransaccionDTO tran) {
+    public ResponseEntity<?> create(@RequestBody Transaccion tran) {
         try {
-            return new ResponseEntity<>(transaccionService.create(tran), HttpStatus.CREATED);
+            Transaccion tranCreated = transaccionService.create(tran);
+            TransaccionDTO tranDto = MapperUtils.DtoFromEntity(tranCreated, TransaccionDTO.class);
+            return new ResponseEntity<>(tranDto, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -78,9 +92,15 @@ public class TransaccionController {
     @ApiOperation(value = "Modifica una transaccion", response = HttpStatus.class, tags = "Transacciones")
     @ResponseBody
     @PreAuthorize("hasAuthority('TRU02')")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody TransaccionDTO tranModified) {
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Transaccion tranModified) {
         try {
-            return new ResponseEntity<>(transaccionService.update(tranModified, id), HttpStatus.OK);
+            Optional<Transaccion> tranUpdated = transaccionService.update(tranModified, id);
+            if (tranUpdated.isPresent()) {
+                TransaccionDTO tranDto = MapperUtils.DtoFromEntity(tranUpdated.get(), TransaccionDTO.class);
+                return new ResponseEntity<>(tranDto, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -92,7 +112,10 @@ public class TransaccionController {
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             transaccionService.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            if (findById(id).getStatusCode() == HttpStatus.NO_CONTENT) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -104,7 +127,10 @@ public class TransaccionController {
     public ResponseEntity<?> deleteAll() {
         try {
             transaccionService.deleteAll();
-            return new ResponseEntity<>(HttpStatus.OK);
+            if (findAll().getStatusCode() == HttpStatus.NO_CONTENT) {
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }

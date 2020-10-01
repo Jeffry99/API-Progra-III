@@ -9,7 +9,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.una.tramites.entities.TramiteTipo;
- 
 
 /**
  *
@@ -19,6 +18,5 @@ public interface ITramiteTipoRepository extends JpaRepository<TramiteTipo, Long>
     
     public List<TramiteTipo> findByDepartamentoId(Long id);
     
-    public List<TramiteTipo> findByDescripcion(@Param("descripcion")String descripcion);
-
+    public List<TramiteTipo> findByDescripcionContainingIgnoreCase(String descripcion);
 }

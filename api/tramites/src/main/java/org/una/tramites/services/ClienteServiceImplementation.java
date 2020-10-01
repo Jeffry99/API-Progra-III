@@ -10,11 +10,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.una.tramites.dto.ClienteDTO;
 import org.una.tramites.entities.Cliente;
 import org.una.tramites.repositories.IClienteRepository;
-import org.una.tramites.utils.MapperUtils;
-import org.una.tramites.utils.ServiceConvertionHelper;
 
 /**
  *
@@ -27,46 +24,42 @@ public class ClienteServiceImplementation implements IClienteService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<ClienteDTO>> findAll() {
-        return ServiceConvertionHelper.findList(clienteRepository.findAll(),ClienteDTO.class);
+    public Optional<List<Cliente>> findAll() {
+        return Optional.ofNullable(clienteRepository.findAll());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<ClienteDTO> findById(Long id) {
-        return ServiceConvertionHelper.oneToOptionalDto(clienteRepository.findById(id),ClienteDTO.class);
+    public Optional<Cliente> findById(Long id) {
+        return clienteRepository.findById(id);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<ClienteDTO>> findByCedulaAproximate(String cedula) {
-        return ServiceConvertionHelper.findList(clienteRepository.findByCedulaContaining(cedula),ClienteDTO.class);
+    public Optional<List<Cliente>> findByCedulaAproximate(String cedula) {
+        return Optional.ofNullable(clienteRepository.findByCedulaContaining(cedula));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<ClienteDTO>> findByNombreCompletoAproximateIgnoreCase(String nombreCompleto) {
-        return ServiceConvertionHelper.findList(clienteRepository.findByNombreCompletoContainingIgnoreCase(nombreCompleto),ClienteDTO.class);
+    public Optional<List<Cliente>> findByNombreCompletoAproximateIgnoreCase(String nombreCompleto) {
+        return Optional.ofNullable(clienteRepository.findByNombreCompletoContainingIgnoreCase(nombreCompleto));
     }
 
     @Override
     @Transactional
-    public ClienteDTO create(ClienteDTO cliente) {
-        Cliente client =MapperUtils.EntityFromDto(cliente,Cliente.class);
-        client = clienteRepository.save(client);
-        return MapperUtils.DtoFromEntity(client,ClienteDTO.class);
+    public Cliente create(Cliente cliente) {
+        return clienteRepository.save(cliente);
     }
 
     @Override
     @Transactional
-    public Optional<ClienteDTO> update(ClienteDTO cliente, Long id) {
+    public Optional<Cliente> update(Cliente cliente, Long id) {
         if (clienteRepository.findById(id).isPresent()) {
-            Cliente client = MapperUtils.EntityFromDto(cliente, Cliente.class);
-            client = clienteRepository.save(client);
-            return Optional.ofNullable(MapperUtils.DtoFromEntity(client, ClienteDTO.class));
+            return Optional.ofNullable(clienteRepository.save(cliente));
         } else {
             return null;
-        } 
+        }
 
     }
 
@@ -80,6 +73,11 @@ public class ClienteServiceImplementation implements IClienteService {
     @Transactional
     public void deleteAll() {
         clienteRepository.deleteAll();
+    }
+
+    @Override
+    public Optional<Cliente> findByCedula(String cedula) {
+        return Optional.ofNullable(clienteRepository.findByCedula(cedula));
     }
     
 }
