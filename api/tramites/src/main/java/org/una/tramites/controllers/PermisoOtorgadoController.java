@@ -46,13 +46,7 @@ public class PermisoOtorgadoController {
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
-            Optional<List<PermisoOtorgado>> result = perOtorgadoService.findAll();
-            if (result.isPresent()) {
-                List<PermisoOtorgadoDTO> perOtorgadosDTO = MapperUtils.DtoListFromEntityList(result.get(), PermisoOtorgadoDTO.class);
-                return new ResponseEntity<>(perOtorgadosDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(perOtorgadoService.findAll(), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -63,45 +57,21 @@ public class PermisoOtorgadoController {
     @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
-            Optional<PermisoOtorgado> perOtorgadoFound = perOtorgadoService.findById(id);
-            if (perOtorgadoFound.isPresent()) {
-                PermisoOtorgadoDTO perOtorDto = MapperUtils.DtoFromEntity(perOtorgadoFound.get(), PermisoOtorgadoDTO.class);
-                return new ResponseEntity<>(perOtorDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(perOtorgadoService.findById(id), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
-    @GetMapping("/usuario_permiso/{usuario}/{permiso}")
-    @ApiOperation(value = "Obtiene un permiso otorgado por su permiso y usuario", response = PermisoOtorgadoDTO.class, tags = "Permisos_Otorgados")
-    @PreAuthorize("hasAuthority('USU04')")
-    public ResponseEntity<?> findByUsuarioIdAndPermisoId(@PathVariable(value = "usuario") Long usuario, @PathVariable(value = "permiso") Long permiso) {
-        try {
-            Optional<PermisoOtorgado> perOtorgadoFound = perOtorgadoService.findByUsuarioAndPermiso(usuario, permiso);
-            if (perOtorgadoFound.isPresent()) {
-                PermisoOtorgadoDTO perOtorDto = MapperUtils.DtoFromEntity(perOtorgadoFound.get(), PermisoOtorgadoDTO.class);
-                return new ResponseEntity<>(perOtorDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
+    
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
     @ApiOperation(value = "Crea un permiso otorgado", response = HttpStatus.class, tags = "Permisos_Otorgados")
     @ResponseBody
     @PreAuthorize("hasAuthority('USU01')")
-    public ResponseEntity<?> create(@RequestBody PermisoOtorgado perOto) {
+    public ResponseEntity<?> create(@PathVariable(value = "id") Long id, @RequestBody PermisoOtorgadoDTO per) {
         try {
-            PermisoOtorgado perOtorgadoCreated = perOtorgadoService.create(perOto);
-            PermisoOtorgadoDTO perOtorgadoDto = MapperUtils.DtoFromEntity(perOtorgadoCreated, PermisoOtorgadoDTO.class);
-            return new ResponseEntity<>(perOtorgadoDto, HttpStatus.CREATED);
+            return new ResponseEntity<>(perOtorgadoService.create(per, id), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -111,12 +81,11 @@ public class PermisoOtorgadoController {
     @ApiOperation(value = "Modifica un permiso otorgado", response = HttpStatus.class, tags = "Permisos_Otorgados")
     @ResponseBody
     @PreAuthorize("hasAuthority('USU02')")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody PermisoOtorgado perOtorgadoModified) {
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @PathVariable(value = "ID") Long ID, @RequestBody PermisoOtorgadoDTO perOtorgadoModified) {
         try {
-            Optional<PermisoOtorgado> perOtorgadoUpdated = perOtorgadoService.update(perOtorgadoModified, id);
+            Optional<PermisoOtorgadoDTO> perOtorgadoUpdated = perOtorgadoService.update(perOtorgadoModified, id, ID);
             if (perOtorgadoUpdated.isPresent()) {
-                PermisoOtorgadoDTO perOtoDto = MapperUtils.DtoFromEntity(perOtorgadoUpdated.get(), PermisoOtorgadoDTO.class);
-                return new ResponseEntity<>(perOtoDto, HttpStatus.OK);
+                return new ResponseEntity<>(perOtorgadoUpdated, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

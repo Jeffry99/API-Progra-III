@@ -9,10 +9,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
 import java.util.Optional;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +44,8 @@ public class DepartamentoController {
     @Autowired
     private IDepartamentoService departamentoService;
     
+    final String MENSAJE_VERIFICAR_INFORMACION = "Debe verifiar el formato y la información de su solicitud con el formato esperado";
+  
     
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los departamentos", response = DepartamentoDTO.class, responseContainer = "List", tags = "Departamentos")
@@ -49,15 +53,9 @@ public class DepartamentoController {
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
-            Optional<List<Departamento>> result = departamentoService.findAll();
-            if (result.isPresent()) {
-                List<DepartamentoDTO> departamentosDTO = MapperUtils.DtoListFromEntityList(result.get(), DepartamentoDTO.class);
-                return new ResponseEntity<>(departamentosDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity(departamentoService.findAll(), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -65,15 +63,8 @@ public class DepartamentoController {
     @ApiOperation(value = "Obtiene un departamento a traves de su identificador unico", response = DepartamentoDTO.class, tags = "Departamentos")
     @PreAuthorize("hasAuthority('DEP04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
-        try {
-
-            Optional<Departamento> departamentoFound = departamentoService.findById(id);
-            if (departamentoFound.isPresent()) {
-                DepartamentoDTO departamentoDTO = MapperUtils.DtoFromEntity(departamentoFound.get(), DepartamentoDTO.class);
-                return new ResponseEntity<>(departamentoDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+          try {
+            return new ResponseEntity<>(departamentoService.findById(id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -85,13 +76,10 @@ public class DepartamentoController {
     @ApiOperation(value = "Crea un departamento", response = DepartamentoDTO.class, tags = "Departamentos")
     @ResponseBody
     @PreAuthorize("hasAuthority('DEP01')")
-    public ResponseEntity<?> create(@RequestBody Departamento departamento) {
+    public ResponseEntity<?> create(@RequestBody DepartamentoDTO departamento) {
         try {
-            Departamento departamentoCreated = departamentoService.create(departamento);
-            DepartamentoDTO departamentoDto = MapperUtils.DtoFromEntity(departamentoCreated, DepartamentoDTO.class);
-            return new ResponseEntity<>(departamentoDto, HttpStatus.CREATED);
+            return new ResponseEntity(departamentoService.create(departamento), HttpStatus.CREATED);
         } catch (Exception e) {
-            System.out.println("Exception create Departamento: "+e.getMessage());
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -100,19 +88,20 @@ public class DepartamentoController {
     @ApiOperation(value = "Modifica un departamento", response = DepartamentoDTO.class, tags = "Departamentos")
     @ResponseBody
     @PreAuthorize("hasAuthority('DEP02')")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Departamento usuarioModified) {
-        try {
-            Optional<Departamento> departamentoUpdated = departamentoService.update(usuarioModified, id);
-            if (departamentoUpdated.isPresent()) {
-                DepartamentoDTO departamentoDto = MapperUtils.DtoFromEntity(departamentoUpdated.get(), DepartamentoDTO.class);
-                return new ResponseEntity<>(departamentoDto, HttpStatus.OK);
-
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @Valid @RequestBody DepartamentoDTO depDTO, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                Optional<DepartamentoDTO> Updated = departamentoService.update(depDTO, id);
+                if (Updated.isPresent()) {
+                    return new ResponseEntity(Updated, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity(HttpStatus.NOT_FOUND);
+                }
+            } catch (Exception e) {
+                return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+        } else {
+            return new ResponseEntity(MENSAJE_VERIFICAR_INFORMACION, HttpStatus.BAD_REQUEST);
         }
     }
     
@@ -122,15 +111,9 @@ public class DepartamentoController {
     @PreAuthorize("hasAuthority('DEP04')")
     public ResponseEntity<?> findByEstado(@PathVariable(value = "estado") boolean estado) {
         try {
-            Optional<List<Departamento>> result = departamentoService.findByEstado(estado);
-            if (result.isPresent()) {
-                List<DepartamentoDTO> departamentosDTO = MapperUtils.DtoListFromEntityList(result.get(), DepartamentoDTO.class);
-                return new ResponseEntity<>(departamentosDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(departamentoService.findByEstado(estado), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -139,15 +122,9 @@ public class DepartamentoController {
     @PreAuthorize("hasAuthority('DEP04')")
     public ResponseEntity<?> findByNombreAproximateIgnoreCase(@PathVariable(value = "nombre") String nombre) {
         try {
-            Optional<List<Departamento>> result = departamentoService.findByNombreAproximateIgnoreCase(nombre);
-            if (result.isPresent()) {
-                List<DepartamentoDTO> departamentosDTO = MapperUtils.DtoListFromEntityList(result.get(), DepartamentoDTO.class);
-                return new ResponseEntity<>(departamentosDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(departamentoService.findByNombreAproximateIgnoreCase(nombre), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -156,30 +133,22 @@ public class DepartamentoController {
     @ApiOperation(value = "Elimina un departamento", response = HttpStatus.class, tags = "Departamentos")
     @PreAuthorize("hasAuthority('DEP03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
-        //TODO: Implementar este método
-        try{
-                    departamentoService.delete(id);
-                    if(findById(id).getStatusCode() == HttpStatus.NO_CONTENT){
-                        return new ResponseEntity<>(HttpStatus.OK);
-                    }
-                    return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-                }catch(Exception ex){
-                    return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-                }
+        try {
+            departamentoService.delete(id);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @DeleteMapping("/") 
     @ApiOperation(value = "Elimina todos los departamentos", response = HttpStatus.class, tags = "Departamentos")
     @PreAuthorize("hasAuthority('DEP03')")
     public ResponseEntity<?> deleteAll() {
- 	//TODO: Implementar este método
-        try{
+        try {
             departamentoService.deleteAll();
-            if(findAll().getStatusCode() == HttpStatus.NO_CONTENT){
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }catch(Exception ex){
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     } 
