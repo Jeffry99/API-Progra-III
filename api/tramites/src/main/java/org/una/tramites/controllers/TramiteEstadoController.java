@@ -43,7 +43,7 @@ public class TramiteEstadoController {
     
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los tramites estados", response = TramiteEstadoDTO.class, responseContainer = "List", tags = "Tramites_Estados")
-    @PreAuthorize("hasAuthority('TRU06')")
+    @PreAuthorize("hasAuthority('TRA06')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -61,7 +61,7 @@ public class TramiteEstadoController {
     
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene tramite estado a traves de su identificador unico", response = TramiteEstadoDTO.class, tags = "Tramites_Estados")
-    @PreAuthorize("hasAuthority('TRU05')")
+    @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -80,7 +80,7 @@ public class TramiteEstadoController {
     @PostMapping("/")
     @ApiOperation(value = "Crea un tramite estado", response = HttpStatus.class, tags = "Tramites_Estados")
     @ResponseBody
-    @PreAuthorize("hasAuthority('TRU01')")
+    @PreAuthorize("hasAuthority('TRA01')")
     public ResponseEntity<?> create(@RequestBody TramiteEstado tramite) {
         try {
             TramiteEstado usuarioCreated = tramiteEstadoService.create(tramite);
@@ -94,7 +94,7 @@ public class TramiteEstadoController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica un tramite estado", response = HttpStatus.class, tags = "Tramites_Estados")
     @ResponseBody
-    @PreAuthorize("hasAuthority('TRU02')")
+    @PreAuthorize("hasAuthority('TRA02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody TramiteEstado traModified) {
         try {
             Optional <TramiteEstado> traUpdated = tramiteEstadoService.update(traModified, id);
@@ -113,7 +113,7 @@ public class TramiteEstadoController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina un tramite estado", response = HttpStatus.class, tags = "Tramites_Estados")
-    @PreAuthorize("hasAuthority('TRU03')")
+    @PreAuthorize("hasAuthority('TRA03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             tramiteEstadoService.delete(id);
@@ -128,7 +128,7 @@ public class TramiteEstadoController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todos los tramites estado", response = HttpStatus.class, tags = "Tramites_Estados")
-    @PreAuthorize("hasAuthority('TRU03')")
+    @PreAuthorize("hasAuthority('TRA03')")
     public ResponseEntity<?> deleteAll() {
         try {
             tramiteEstadoService.deleteAll();

@@ -42,7 +42,7 @@ public class TramiteRegistradoController {
 
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los tramites registrados", response = TramiteRegistradoDTO.class, responseContainer = "List", tags = "Tramites_Registrados")
-    @PreAuthorize("hasAuthority('TRU06')")
+    @PreAuthorize("hasAuthority('TRA06')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -60,7 +60,7 @@ public class TramiteRegistradoController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene un tramite registrado a traves de su identificador unico", response = TramiteRegistradoDTO.class, tags = "Tramites_Registrados")
-    @PreAuthorize("hasAuthority('TRU05')")
+    @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -80,7 +80,7 @@ public class TramiteRegistradoController {
     @PostMapping("/")
     @ApiOperation(value = "Crea un tramite registrado", response = HttpStatus.class, tags = "Tramites_Registrados")
     @ResponseBody
-    @PreAuthorize("hasAuthority('TRU01')")
+    @PreAuthorize("hasAuthority('TRA01')")
     public ResponseEntity<?> create(@RequestBody TramiteRegistrado tramites) {
         try {
             TramiteRegistrado tramitesCreated = tramitesRegistradosService.create(tramites);
@@ -94,7 +94,7 @@ public class TramiteRegistradoController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica un tramite registrado", response = HttpStatus.class, tags = "Tramites_Registrados")
     @ResponseBody
-    @PreAuthorize("hasAuthority('TRU02')")
+    @PreAuthorize("hasAuthority('TRA02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody TramiteRegistrado tramitesModified) {
         try {
             Optional<TramiteRegistrado> tramitesUpdated = tramitesRegistradosService.update(tramitesModified, id);
@@ -113,7 +113,7 @@ public class TramiteRegistradoController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina un tramite registrado", response = HttpStatus.class, tags = "Tramites_Registrados")
-    @PreAuthorize("hasAuthority('TRU03')")
+    @PreAuthorize("hasAuthority('TRA03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             tramitesRegistradosService.delete(id);
@@ -128,7 +128,7 @@ public class TramiteRegistradoController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todos los tramites registrados", response = HttpStatus.class, tags = "Tramites_Registrados")
-    @PreAuthorize("hasAuthority('TRU03')")
+    @PreAuthorize("hasAuthority('TRA03')")
     public ResponseEntity<?> deleteAll() {
         try {
             tramitesRegistradosService.deleteAll();

@@ -42,7 +42,7 @@ public class TramiteTipoController {
     
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los Tipos de tramites", response = TramiteTipoDTO.class, responseContainer = "List", tags = "Tramites_Tipos")
-    @PreAuthorize("hasAuthority('TRU06')")
+    @PreAuthorize("hasAuthority('TRA06')")
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
@@ -60,7 +60,7 @@ public class TramiteTipoController {
     
     @GetMapping("/{id}") 
     @ApiOperation(value = "Obtiene un usuario por su id", response = TramiteTipoDTO.class, tags = "Tramites_Tipos")
-    @PreAuthorize("hasAuthority('TRU05')")
+    @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
 
@@ -80,7 +80,7 @@ public class TramiteTipoController {
     @PostMapping("/")
     @ApiOperation(value = "Crea un tipo de tramite", response = HttpStatus.class, tags = "Tramites_Tipos")
     @ResponseBody
-    @PreAuthorize("hasAuthority('TRU01')")
+    @PreAuthorize("hasAuthority('TRA01')")
     public ResponseEntity<?> create(@RequestBody TramiteTipo usuario) {
         try {
             TramiteTipo usuarioCreated = traService.create(usuario);
@@ -94,7 +94,7 @@ public class TramiteTipoController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica un tipo de tramite", response = HttpStatus.class, tags = "Tramites_Tipos")
     @ResponseBody
-    @PreAuthorize("hasAuthority('TRU02')")
+    @PreAuthorize("hasAuthority('TRA02')")
     public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody TramiteTipo traModified) {
         try {
             Optional <TramiteTipo> traUpdated = traService.update(traModified, id);
@@ -113,7 +113,7 @@ public class TramiteTipoController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Elimina un tipo de tramite", response = HttpStatus.class, tags = "Tramites_Tipos")
-    @PreAuthorize("hasAuthority('TRU03')")
+    @PreAuthorize("hasAuthority('TRA03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             traService.delete(id);
@@ -128,7 +128,7 @@ public class TramiteTipoController {
 
     @DeleteMapping("/")
     @ApiOperation(value = "Elimina todos los tipos de tramites", response = HttpStatus.class, tags = "Tramites_Tipos")
-    @PreAuthorize("hasAuthority('TRU03')")
+    @PreAuthorize("hasAuthority('TRA03')")
     public ResponseEntity<?> deleteAll() {
         try {
             traService.deleteAll();
@@ -143,7 +143,7 @@ public class TramiteTipoController {
     
     @GetMapping("/usuarios_en_departamento/{depaId}")
     @ApiOperation(value = "Obtiene una lista de tipos de tramites por su departamento", response = TramiteTipoDTO.class, responseContainer = "List", tags = "Tramites_Tipos")
-    @PreAuthorize("hasAuthority('TRU05')")
+    @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findByDepartamentoId(@PathVariable(value = "depaId") Long depaId) {
         try {
             Optional<List<TramiteTipo>> result = traService.findByDepartamentoId(depaId);
@@ -159,7 +159,7 @@ public class TramiteTipoController {
     
     @GetMapping("/buscarDescripcion/{descripcion}")
     @ApiOperation(value = "Obtiene una lista de tipos de tramites por su descripcion", response = TramiteTipoDTO.class, responseContainer = "List", tags = "Tramites_Tipos")
-    @PreAuthorize("hasAuthority('TRU05')")
+    @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion") String descripcion) {
         try {
             Optional<List<TramiteTipo>> result = traService.findByDescripcion(descripcion);
