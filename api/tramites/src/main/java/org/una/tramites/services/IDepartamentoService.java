@@ -7,25 +7,24 @@ package org.una.tramites.services;
 
 import java.util.List;
 import java.util.Optional;
-import org.una.tramites.dto.DepartamentoDTO;
-
+import org.una.tramites.entities.Departamento;
 
 /**
  *
  * @author Pablo-VE
  */
 public interface IDepartamentoService {
-    public Optional<List<DepartamentoDTO>> findAll();
+    public Optional<List<Departamento>> findAll();
 
-    public Optional<DepartamentoDTO> findById(Long id);
+    public Optional<Departamento> findById(Long id);
     
-    public Optional<List<DepartamentoDTO>> findByEstado(boolean estado);
+    public Optional<List<Departamento>> findByEstado(boolean estado);
     
-    public Optional<List<DepartamentoDTO>> findByNombreAproximateIgnoreCase(String nombre);
+    public Optional<List<Departamento>> findByNombreAproximateIgnoreCase(String nombre);
     
-    public DepartamentoDTO create(DepartamentoDTO usuario);
+    public Departamento create(Departamento usuario);
 
-    public Optional<DepartamentoDTO> update(DepartamentoDTO departamento, Long id);
+    public Optional<Departamento> update(Departamento departamento, Long id);
     
     
 

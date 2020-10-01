@@ -32,13 +32,18 @@ public class UsuarioDTO {
     private String cedula; 
     private boolean estado; 
     private String passwordEncriptado;
+    
     @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date fechaRegistro; 
+    
     @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date fechaModificacion; 
+    
     private boolean esJefe;
     private DepartamentoDTO departamento;
-    private List<PermisoOtorgadoDTO> permisos;  
+    
+    
+   
      
 }
 

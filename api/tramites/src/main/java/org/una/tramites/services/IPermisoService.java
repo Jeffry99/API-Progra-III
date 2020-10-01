@@ -3,7 +3,6 @@ package org.una.tramites.services;
 
 import java.util.List;
 import java.util.Optional;
-import org.una.tramites.dto.PermisoDTO;
 import org.una.tramites.entities.Permiso;
 
 /**
@@ -12,19 +11,19 @@ import org.una.tramites.entities.Permiso;
  */
 public interface IPermisoService {
     
-    public Optional<PermisoDTO> findById(Long id);
+    public Optional<Permiso> findById(Long id);
     
-    public Optional<List<PermisoDTO>> findByEstado(boolean estado);
+    public Optional<List<Permiso>> findByEstado(boolean estado);
     
-    public Optional<PermisoDTO> findByCodigo(String Codigo);
+    public Optional<Permiso> findByCodigo(String Codigo);
     
-    public Optional<List<PermisoDTO>> findByCodigoAproximate(String codigo);
+    public Optional<List<Permiso>> findByCodigoAproximate(String codigo);
     
-    public Optional<List<PermisoDTO>> findAll();
+    public Optional<List<Permiso>> findAll();
     
-    public PermisoDTO create(PermisoDTO permiso);
+    public Permiso create(Permiso permiso);
     
-    public Optional<PermisoDTO> update(PermisoDTO permiso, Long id);
+    public Optional<Permiso> update(Permiso permiso, Long id);
     
     public void delete(Long id);
     

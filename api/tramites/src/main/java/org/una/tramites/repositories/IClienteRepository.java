@@ -23,6 +23,6 @@ public interface IClienteRepository extends JpaRepository<Cliente, Long>{
 
     public List<Cliente> findByNombreCompletoContainingIgnoreCase(String nombreCompleto);
     
-    public List<Cliente> findByCedula(String cedula);
+    public Cliente findByCedula(String cedula);
     
 }
