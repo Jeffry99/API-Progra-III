@@ -5,25 +5,33 @@
  */
 package org.una.tramites.services;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import org.una.tramites.entities.TramiteRegistrado;
+import org.una.tramites.dto.TramiteRegistradoDTO;
+
 
 /**
  *
  * @author Pablo-VE
  */
 public interface ITramiteRegistradoService {
-     public Optional<List<TramiteRegistrado>> findAll();
+     public Optional<List<TramiteRegistradoDTO>> findAll();
 
-    public Optional<TramiteRegistrado> findById(Long id);
+    public Optional<TramiteRegistradoDTO> findById(Long id);
     
-    public TramiteRegistrado create(TramiteRegistrado tramitesRegistrados);
+    public TramiteRegistradoDTO create(TramiteRegistradoDTO tramitesRegistrados);
 
-    public Optional<TramiteRegistrado> update(TramiteRegistrado tramitesRegistrados, Long id);
+    public Optional<TramiteRegistradoDTO> update(TramiteRegistradoDTO tramitesRegistrados, Long id);
 
     public void delete(Long id);
 
     public void deleteAll();
+    
+    public Optional<List<TramiteRegistradoDTO>> findByClienteId(Long id);
+    
+    public Optional<List<TramiteRegistradoDTO>> findByTramiteTipoId(Long id);
+
+    //public Optional<List<TramiteRegistradoDTO>> getByFilter(String cedula, String estado, Date inicio, Date fin);
     
 }

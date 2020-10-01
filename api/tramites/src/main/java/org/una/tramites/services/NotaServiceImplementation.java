@@ -10,8 +10,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.una.tramites.dto.NotaDTO;
 import org.una.tramites.entities.Nota;
 import org.una.tramites.repositories.INotaRepository;
+import org.una.tramites.utils.MapperUtils;
+import org.una.tramites.utils.ServiceConvertionHelper;
 
 /**
  *
@@ -25,29 +28,34 @@ public class NotaServiceImplementation implements INotaService{
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<Nota>> findAll() {
-        return Optional.ofNullable(notasRepository.findAll());
+    public Optional<List<NotaDTO>> findAll() {
+        return ServiceConvertionHelper.findList(notasRepository.findAll(),NotaDTO.class);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Nota> findById(Long id) {
-        return notasRepository.findById(id);
+    public Optional<NotaDTO> findById(Long id) {
+        return ServiceConvertionHelper.oneToOptionalDto(notasRepository.findById(id),NotaDTO.class);
     }
 
     @Override
     @Transactional
-    public Nota create(Nota variacion) {
-        return notasRepository.save(variacion);
+    public NotaDTO create(NotaDTO notas) {
+        Nota archiv = MapperUtils.EntityFromDto(notas, Nota.class);
+        archiv = notasRepository.save(archiv);
+        return MapperUtils.DtoFromEntity(archiv, NotaDTO.class);
     }
 
     @Override
     @Transactional
-    public Optional<Nota> update(Nota notas, Long id) {
+     public Optional<NotaDTO> update(NotaDTO notas, Long id) {
         if (notasRepository.findById(id).isPresent()) {
-            return Optional.ofNullable(notasRepository.save(notas));
-        }
-        return null;
+            Nota archiv = MapperUtils.EntityFromDto(notas, Nota.class);
+            archiv = notasRepository.save(archiv);
+            return Optional.ofNullable(MapperUtils.DtoFromEntity(archiv, NotaDTO.class));
+        } else {
+            return null;
+        } 
     }
 
     @Override
@@ -62,9 +70,9 @@ public class NotaServiceImplementation implements INotaService{
         notasRepository.deleteAll();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<Nota> findByTitulo(String titulo) {
-        return Optional.ofNullable(notasRepository.findByTitulo(titulo));
-    }
-}
+//    @Override
+//    @Transactional(readOnly = true)
+//    public Optional<List<NotaDTO>> findByTitulo(String cedula) {
+//        return ServiceConvertionHelper.findList(notasRepository.findByTitulo(cedula), NotaDTO.class);  
+//   }
+ }

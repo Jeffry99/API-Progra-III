@@ -53,7 +53,7 @@ public class TramiteTipo implements Serializable{
 
     @Column
     private boolean estado;
-
+        
     @Column(name = "fecha_registro", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @Setter(AccessLevel.NONE)
