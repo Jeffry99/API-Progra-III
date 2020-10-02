@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,8 @@ public class PermisoOtorgadoController {
     
     @Autowired
     private IPermisoOtorgadoService perOtorgadoService;
+ 
+    final String MENSAJE_VERIFICAR_INFORMACION = "Debe verifiar el formato y la información de su solicitud con el formato esperado";
 
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los permisos otorgados", response = PermisoOtorgadoDTO.class, responseContainer = "List", tags = "Permisos_Otorgados")
@@ -46,13 +49,7 @@ public class PermisoOtorgadoController {
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
-            Optional<List<PermisoOtorgado>> result = perOtorgadoService.findAll();
-            if (result.isPresent()) {
-                List<PermisoOtorgadoDTO> perOtorgadosDTO = MapperUtils.DtoListFromEntityList(result.get(), PermisoOtorgadoDTO.class);
-                return new ResponseEntity<>(perOtorgadosDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(perOtorgadoService.findAll(), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -63,66 +60,65 @@ public class PermisoOtorgadoController {
     @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
-            Optional<PermisoOtorgado> perOtorgadoFound = perOtorgadoService.findById(id);
-            if (perOtorgadoFound.isPresent()) {
-                PermisoOtorgadoDTO perOtorDto = MapperUtils.DtoFromEntity(perOtorgadoFound.get(), PermisoOtorgadoDTO.class);
-                return new ResponseEntity<>(perOtorDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(perOtorgadoService.findById(id), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
-    @GetMapping("/usuario_permiso/{usuario}/{permiso}")
-    @ApiOperation(value = "Obtiene un permiso otorgado por su permiso y usuario", response = PermisoOtorgadoDTO.class, tags = "Permisos_Otorgados")
-    @PreAuthorize("hasAuthority('USU04')")
-    public ResponseEntity<?> findByUsuarioIdAndPermisoId(@PathVariable(value = "usuario") Long usuario, @PathVariable(value = "permiso") Long permiso) {
-        try {
-            Optional<PermisoOtorgado> perOtorgadoFound = perOtorgadoService.findByUsuarioAndPermiso(usuario, permiso);
-            if (perOtorgadoFound.isPresent()) {
-                PermisoOtorgadoDTO perOtorDto = MapperUtils.DtoFromEntity(perOtorgadoFound.get(), PermisoOtorgadoDTO.class);
-                return new ResponseEntity<>(perOtorDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @GetMapping("/usuario_permiso/{usuario}/{permiso}")
+//    @ApiOperation(value = "Obtiene un permiso otorgado por su permiso y usuario", response = PermisoOtorgadoDTO.class, tags = "Permisos_Otorgados")
+//    @PreAuthorize("hasAuthority('USU04')")
+//    public ResponseEntity<?> findByUsuarioIdAndPermisoId(@PathVariable(value = "usuario") Long usuario, @PathVariable(value = "permiso") Long permiso) {
+//        try {
+//            Optional<PermisoOtorgado> perOtorgadoFound = perOtorgadoService.findByUsuarioAndPermiso(usuario, permiso);
+//            if (perOtorgadoFound.isPresent()) {
+//                PermisoOtorgadoDTO perOtorDto = MapperUtils.DtoFromEntity(perOtorgadoFound.get(), PermisoOtorgadoDTO.class);
+//                return new ResponseEntity<>(perOtorDto, HttpStatus.OK);
+//            } else {
+//                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//            }
+//        } catch (Exception ex) {
+//            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/")
     @ApiOperation(value = "Crea un permiso otorgado", response = HttpStatus.class, tags = "Permisos_Otorgados")
     @ResponseBody
     @PreAuthorize("hasAuthority('USU01')")
-    public ResponseEntity<?> create(@RequestBody PermisoOtorgado perOto) {
-        try {
-            PermisoOtorgado perOtorgadoCreated = perOtorgadoService.create(perOto);
-            PermisoOtorgadoDTO perOtorgadoDto = MapperUtils.DtoFromEntity(perOtorgadoCreated, PermisoOtorgadoDTO.class);
-            return new ResponseEntity<>(perOtorgadoDto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> create(@RequestBody PermisoOtorgadoDTO perOtorgado, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                return new ResponseEntity(perOtorgadoService.create(perOtorgado), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return new ResponseEntity(MENSAJE_VERIFICAR_INFORMACION, HttpStatus.BAD_REQUEST);
+        } 
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica un permiso otorgado", response = HttpStatus.class, tags = "Permisos_Otorgados")
     @ResponseBody
     @PreAuthorize("hasAuthority('USU02')")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody PermisoOtorgado perOtorgadoModified) {
-        try {
-            Optional<PermisoOtorgado> perOtorgadoUpdated = perOtorgadoService.update(perOtorgadoModified, id);
-            if (perOtorgadoUpdated.isPresent()) {
-                PermisoOtorgadoDTO perOtoDto = MapperUtils.DtoFromEntity(perOtorgadoUpdated.get(), PermisoOtorgadoDTO.class);
-                return new ResponseEntity<>(perOtoDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> update(@PathVariable(value = "id Permiso") Long id, @PathVariable(value = "ID Usuario") Long ID, @RequestBody PermisoOtorgadoDTO perOtorgadoModified, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                Optional<PermisoOtorgadoDTO> perOtorgadoUpdated = perOtorgadoService.update(perOtorgadoModified, id, ID);
+                if (perOtorgadoUpdated.isPresent()) {
+                    return new ResponseEntity<>(perOtorgadoUpdated, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                }
+            } catch (Exception e) {
+                return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
             }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        } else {
+            return new ResponseEntity(MENSAJE_VERIFICAR_INFORMACION, HttpStatus.BAD_REQUEST);
+        }    
     }
 
     @DeleteMapping("/{id}")
@@ -131,12 +127,9 @@ public class PermisoOtorgadoController {
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             perOtorgadoService.delete(id);
-            if (findById(id).getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -146,12 +139,9 @@ public class PermisoOtorgadoController {
     public ResponseEntity<?> deleteAll() {
         try {
             perOtorgadoService.deleteAll();
-            if (findAll().getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

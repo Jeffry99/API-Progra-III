@@ -30,7 +30,9 @@ public class MapperUtils {
         return modelMapper.map(entity, dtoClass);
     }
     
-
+    public static <D, E> E EntityFromDto(final D dto, Class<E> entityClass) {
+        return modelMapper.map(dto, entityClass);
+    }
     
     
     
