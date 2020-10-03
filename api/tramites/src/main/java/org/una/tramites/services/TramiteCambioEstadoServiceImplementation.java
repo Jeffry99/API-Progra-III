@@ -37,6 +37,12 @@ public class TramiteCambioEstadoServiceImplementation implements ITramiteCambioE
     public Optional<List<TramiteCambioEstadoDTO>> findAll() {
         return ServiceConvertionHelper.findList(tramitesCambioRepository.findAll(), TramiteCambioEstadoDTO.class);
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<List<TramiteCambioEstadoDTO>> findByTramitesRegistrados(long tramitesRegistrados){
+        return ServiceConvertionHelper.findList(tramitesCambioRepository.findByTramitesRegistrados(tramitesRegistrados), TramiteCambioEstadoDTO.class);
+    }
 
     @Override
     @Transactional

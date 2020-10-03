@@ -18,6 +18,8 @@ public interface ITramiteCambioEstadoService {
      public Optional<TramiteCambioEstadoDTO> findById(Long id);
     
     public Optional<List<TramiteCambioEstadoDTO>> findAll();
+    
+    public Optional<List<TramiteCambioEstadoDTO>> findByTramitesRegistrados(long tramitesRegistrados);
  
     public TramiteCambioEstadoDTO create(TramiteCambioEstadoDTO tramitesCambioE);
     

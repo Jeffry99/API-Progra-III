@@ -126,4 +126,16 @@ public class TramiteCambioEstadoController {
             return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @GetMapping("/tramitesRegistrados/{term}")
+    @ApiOperation(value = "Obtiene una lista de todos los tramite cambio estado por tramite registrado", response = TramiteCambioEstadoDTO.class, responseContainer = "List", tags = "Notas")
+    @PreAuthorize("hasAuthority('TRA06')")
+    public @ResponseBody
+    ResponseEntity<?> findByTramiteRegistrado(@PathVariable(value = "term") Long term) {
+        try {        
+            return new ResponseEntity(tramiteService.findByTramitesRegistrados(term), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
