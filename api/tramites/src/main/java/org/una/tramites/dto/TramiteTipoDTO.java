@@ -33,6 +33,6 @@ public class TramiteTipoDTO {
     private java.util.Date fechaRegistro;
     @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private java.util.Date fechaModificacion;
-    private List<VariacionDTO> variaciones = new ArrayList<>();
+   // private List<VariacionDTO> variaciones = new ArrayList<>();
     
 }
