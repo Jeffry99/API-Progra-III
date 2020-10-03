@@ -40,7 +40,7 @@ public class TramiteTipoController {
     @Autowired
     private ITramiteTipoService traService;
     
-    @GetMapping()
+    @GetMapping("/")
     @ApiOperation(value = "Obtiene una lista de todos los Tipos de tramites", response = TramiteTipoDTO.class, responseContainer = "List", tags = "Tramites_Tipos")
     @PreAuthorize("hasAuthority('TRA06')")
     public @ResponseBody

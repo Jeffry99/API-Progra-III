@@ -16,7 +16,7 @@ import org.modelmapper.convention.MatchingStrategies;
  * @author Pablo-VE
  */
 public class MapperUtils {
-        private static ModelMapper modelMapper = new ModelMapper();
+    private static ModelMapper modelMapper = new ModelMapper();
 
     static {
         modelMapper = new ModelMapper();

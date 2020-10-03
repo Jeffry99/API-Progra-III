@@ -28,6 +28,12 @@ public class NotaServiceImplementation implements INotaService{
     public Optional<List<Nota>> findAll() {
         return Optional.ofNullable(notasRepository.findAll());
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<List<Nota>> findByTramitesRegistrados(long tramitesRegistrados){
+        return Optional.ofNullable(notasRepository.findByTramitesRegistrados(tramitesRegistrados));
+    }
 
     @Override
     @Transactional(readOnly = true)

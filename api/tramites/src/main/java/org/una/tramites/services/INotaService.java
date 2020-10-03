@@ -15,6 +15,8 @@ import org.una.tramites.entities.Nota;
  */
 public interface INotaService {
     public Optional<List<Nota>> findAll();
+    
+    public Optional<List<Nota>> findByTramitesRegistrados(long tramitesRegistrados);
 
     public Optional<Nota> findById(Long id);
 

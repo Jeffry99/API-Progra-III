@@ -68,8 +68,8 @@ public class TramiteTipo implements Serializable{
     @JoinColumn(name="departamentos_id")
     private Departamento departamento;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tramitesTipos") 
-    private List<Variacion> variaciones = new ArrayList<>();
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tramitesTipos") 
+//    private List<Variacion> variaciones = new ArrayList<>();
     
     @PrePersist
     public void prePersist() {

@@ -40,7 +40,7 @@ public class NotaController {
      @Autowired
     private NotaServiceImplementation notasService;
 
-    @GetMapping()
+    @GetMapping("/")
     @ApiOperation(value = "Obtiene una lista de todos las notas", response = NotaDTO.class, responseContainer = "List", tags = "Notas")
     @PreAuthorize("hasAuthority('USU04')")
     public @ResponseBody
@@ -56,6 +56,25 @@ public class NotaController {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @GetMapping("/tramitesRegistrados/{term}")
+    @ApiOperation(value = "Obtiene una lista de todos las notas por tramite registrado", response = NotaDTO.class, responseContainer = "List", tags = "Notas")
+    @PreAuthorize("hasAuthority('USU04')")
+    public @ResponseBody
+    ResponseEntity<?> findByTramiteRegistrado(@PathVariable(value = "term") Long term) {
+        try {
+            Optional<List<Nota>> result = notasService.findByTramitesRegistrados(term);
+            if (result.isPresent()) {
+                List<NotaDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), NotaDTO.class);
+                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene una notas a traves de su identificador unico", response = NotaDTO.class, tags = "Notas")

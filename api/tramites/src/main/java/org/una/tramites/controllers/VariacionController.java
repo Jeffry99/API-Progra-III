@@ -152,10 +152,10 @@ public class VariacionController {
         }
     }
     
-    @GetMapping("/{grupo}")
+    @GetMapping("/codigo/{codigo}")
     @ApiOperation(value = "Obtiene una lista de las variaciones por medio de su grupo", response = VariacionDTO.class, responseContainer = "List", tags = "Variaciones")
     @PreAuthorize("hasAuthority('TRA05')")
-    public ResponseEntity<?> findByGrupo(@PathVariable(value = "grupo")String codigo){
+    public ResponseEntity<?> findByCodigo(@PathVariable(value = "grupo")String codigo){
         try{
             Optional<List<Variacion>> result = varService.findByGrupo(codigo);
             if(result.isPresent()){

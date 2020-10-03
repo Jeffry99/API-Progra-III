@@ -24,6 +24,6 @@ import org.una.tramites.entities.Cliente;
 public class TramiteRegistradoDTO {
     private Long id;
     private int tramitesTiposId;
-    private Cliente clienteId;
+    private Cliente cliente;
  
 }

@@ -71,8 +71,7 @@ public class Cliente implements Serializable {
     @Column(length = 100, name = "password_encriptado")
     private String passwordEncriptado;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "cliente") 
-    private List<TramiteRegistrado> tramitesRegistrados = new ArrayList<>();
+    
 
     private static final long serialVersionUID = 1L;
 

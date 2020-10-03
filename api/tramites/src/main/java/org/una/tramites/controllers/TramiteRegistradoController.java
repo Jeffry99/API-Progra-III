@@ -40,7 +40,7 @@ public class TramiteRegistradoController {
     @Autowired
     private ITramiteRegistradoService tramitesRegistradosService;
 
-    @GetMapping()
+    @GetMapping("/")
     @ApiOperation(value = "Obtiene una lista de todos los tramites registrados", response = TramiteRegistradoDTO.class, responseContainer = "List", tags = "Tramites_Registrados")
     @PreAuthorize("hasAuthority('TRA06')")
     public @ResponseBody
