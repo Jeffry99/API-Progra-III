@@ -104,7 +104,7 @@ public class PermisoOtorgadoController {
     @ApiOperation(value = "Modifica un permiso otorgado", response = HttpStatus.class, tags = "Permisos_Otorgados")
     @ResponseBody
     @PreAuthorize("hasAuthority('USU02')")
-    public ResponseEntity<?> update(@PathVariable(value = "id Permiso") Long id, @PathVariable(value = "ID Usuario") Long ID, @RequestBody PermisoOtorgadoDTO perOtorgadoModified, BindingResult bindingResult) {
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @PathVariable(value = "ID") Long ID, @RequestBody PermisoOtorgadoDTO perOtorgadoModified, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             try {
                 Optional<PermisoOtorgadoDTO> perOtorgadoUpdated = perOtorgadoService.update(perOtorgadoModified, id, ID);

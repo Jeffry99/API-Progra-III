@@ -10,8 +10,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.una.tramites.dto.TramiteCambioEstadoDTO;
 import org.una.tramites.entities.TramiteCambioEstado;
 import org.una.tramites.repositories.ITramiteCambioEstadoRepository;
+import org.una.tramites.utils.MapperUtils;
+import org.una.tramites.utils.ServiceConvertionHelper;
 
 /**
  *
@@ -25,30 +28,33 @@ public class TramiteCambioEstadoServiceImplementation implements ITramiteCambioE
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<TramiteCambioEstado> findById(Long id) {
-        return tramitesCambioRepository.findById(id);
+    public Optional<TramiteCambioEstadoDTO> findById(Long id) {
+        return ServiceConvertionHelper.oneToOptionalDto(tramitesCambioRepository.findById(id), TramiteCambioEstadoDTO.class);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<TramiteCambioEstado>> findAll() {
-        return Optional.ofNullable(tramitesCambioRepository.findAll());
+    public Optional<List<TramiteCambioEstadoDTO>> findAll() {
+        return ServiceConvertionHelper.findList(tramitesCambioRepository.findAll(), TramiteCambioEstadoDTO.class);
     }
 
     @Override
     @Transactional
-    public TramiteCambioEstado create(TramiteCambioEstado tramitesCambioE) {
-        return tramitesCambioRepository.save(tramitesCambioE);
+    public TramiteCambioEstadoDTO create(TramiteCambioEstadoDTO tramitesCambioE) {
+        TramiteCambioEstado tramite = MapperUtils.EntityFromDto(tramitesCambioE, TramiteCambioEstado.class);
+        tramite = tramitesCambioRepository.save(tramite);
+        return MapperUtils.DtoFromEntity(tramite, TramiteCambioEstadoDTO.class);
     }
 
     @Override
     @Transactional
-    public Optional<TramiteCambioEstado> update(TramiteCambioEstado tramitesCambioE, Long id) {
-        if (tramitesCambioRepository.findById(id).isPresent()) {
-            return Optional.ofNullable(tramitesCambioRepository.save(tramitesCambioE));
-        } else {
-            return null;
+    public Optional<TramiteCambioEstadoDTO> update(TramiteCambioEstadoDTO tramitesCambioE, Long id) {
+        if(tramitesCambioRepository.findById(id).isPresent()){
+            TramiteCambioEstado per = MapperUtils.EntityFromDto(tramitesCambioE, TramiteCambioEstado.class);
+            per = tramitesCambioRepository.save(per);
+            return Optional.ofNullable(MapperUtils.DtoFromEntity(per, TramiteCambioEstadoDTO.class));
         }
+        return null;
     }
 
     @Override
