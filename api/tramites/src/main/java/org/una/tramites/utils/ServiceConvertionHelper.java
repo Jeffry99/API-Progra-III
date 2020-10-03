@@ -21,15 +21,6 @@ public class ServiceConvertionHelper {
         }
         return null;
     }
-    /*
-    private Optional<List<UsuarioDTO>> findList(List<Usuario> list) {
-        if (list != null) {
-            List<UsuarioDTO> usuariosDTO = MapperUtils.DtoListFromEntityList(list, UsuarioDTO.class);
-            return Optional.ofNullable(usuariosDTO);
-        } else {
-            return null;
-        }
-    }*/
     
     public static<D, E> Optional<List<D>> findList(final Optional<Collection<E>> list, Class<D> dtoClass){
         if(list.isPresent()){
@@ -38,15 +29,6 @@ public class ServiceConvertionHelper {
         return null;
     }
     
-/*
-    private Optional<List<UsuarioDTO>> findList(Optional<List<Usuario>> list) {
-        if (list.isPresent()) {
-            return findList(list.get());
-        } else {
-            return null;
-        }
-    }
-*/
     public static<D, E> Optional<D> oneToOptionalDto(final Optional<E> one, Class<D> dtoClass){
         if(one.isPresent()){
             D oneDto = MapperUtils.DtoFromEntity(one.get(), dtoClass);
@@ -54,15 +36,7 @@ public class ServiceConvertionHelper {
         }
         return null;
     }
-/*
-    private Optional<UsuarioDTO> oneToDto(Optional<Usuario> one) {
-        if (one.isPresent()) {
-            UsuarioDTO usuarioDTO = MapperUtils.DtoFromEntity(one.get(), UsuarioDTO.class);
-            return Optional.ofNullable(usuarioDTO);
-        } else {
-            return null;
-        }
-    }*/
+
     
     public static<D, E> D oneToDto(final Optional<E> one, Class<D> dtoClass){
         if(one.isPresent()){
