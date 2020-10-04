@@ -7,6 +7,8 @@ package org.una.tramites.repositories;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.una.tramites.entities.TramiteRegistrado;
 
 /**
@@ -14,7 +16,8 @@ import org.una.tramites.entities.TramiteRegistrado;
  * @author Pablo-VE
  */
 public interface ITramiteRegistradoRepository extends JpaRepository<TramiteRegistrado, Long> {
-    //public List<TramiteRegistrado> findByClientesId(Long id);
+    @Query("SELECT t FROM TramiteRegistrado t LEFT JOIN t.cliente c WHERE UPPER(c.cedula) like  CONCAT('%', UPPER(:cedulaC), '%')")
+    public List<TramiteRegistrado> findByCedulaCliente(@Param("cedulaC") String cedulaC);
     
  //   public List<TramiteRegistrado> findByTramitesTiposId(Long id);
     
