@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -41,20 +42,16 @@ public class ParametrosGeneralesController {
     
     @Autowired
     private IParametrosGeneralesService paramGenService;
-    
+    final String MENSAJE_VERIFICAR_INFORMACION = "Debe verifiar el formato y la información de su solicitud con el formato esperado";
+
     @GetMapping("/pornombre/{nombre}")
     @ApiOperation(value = "Obtiene los paremetros generales segun el nombre", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
     @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByNombre(@PathVariable(value = "nombre")String nombre) {
-        try{
-            Optional<List<ParametrosGenerales>> result = paramGenService.findByNombre(nombre);
-            if(result.isPresent()){
-                List<ParametrosGeneralesDTO> resultDto = MapperUtils.DtoListFromEntityList(result.get(), ParametrosGeneralesDTO.class);
-                return new ResponseEntity<>(resultDto, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch(Exception ex){
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            return new ResponseEntity<>(paramGenService.findByNombre(nombre), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -63,7 +60,7 @@ public class ParametrosGeneralesController {
     @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
-            Optional<ParametrosGenerales> permisoFound = paramGenService.findById(id);
+            Optional<ParametrosGeneralesDTO> permisoFound = paramGenService.findById(id);
             if (permisoFound.isPresent()) {
                 PermisoDTO perDto = MapperUtils.DtoFromEntity(permisoFound.get(), PermisoDTO.class);
                 return new ResponseEntity<>(perDto, HttpStatus.OK);
@@ -79,30 +76,20 @@ public class ParametrosGeneralesController {
     @ApiOperation(value = "Obtiene una lista de Parametros Generales segun el valor que guardan", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
     @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByValor(@PathVariable(value = "valor") String valor){
-        try{
-            Optional<List<ParametrosGenerales>> result = paramGenService.findByValor(valor);
-            if(result.isPresent()){
-                List<ParametrosGeneralesDTO> resultDto = MapperUtils.DtoListFromEntityList(result.get(), ParametrosGeneralesDTO.class);
-                return new ResponseEntity<>(resultDto, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch(Exception ex){
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            return new ResponseEntity<>(paramGenService.findByValor(valor), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("/pordescripcion/{descripcion}")
     @ApiOperation(value = "Obtiene una lista de Parametros Generales segun su descripcion", response = ParametrosGeneralesDTO.class, responseContainer = "List", tags = "Parametros_Generales")
     @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion")String descripcion){
-        try{
-            Optional<List<ParametrosGenerales>> result = paramGenService.findByDescripcion(descripcion);
-            if(result.isPresent()){
-                List<ParametrosGeneralesDTO> resultDto = MapperUtils.DtoListFromEntityList(result.get(), ParametrosGeneralesDTO.class);
-                return new ResponseEntity<>(resultDto, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch(Exception ex){
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            return new ResponseEntity<>(paramGenService.findByDescripcion(descripcion), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -110,14 +97,14 @@ public class ParametrosGeneralesController {
     @ApiOperation(value = "Modifica un parametro general", response = HttpStatus.class, tags = "Parametros_Generales")
     @ResponseBody
     @PreAuthorize("hasAuthority('USU02')")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody ParametrosGenerales parGen) {
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody ParametrosGeneralesDTO paramGenModified, @RequestBody PermisoDTO perModified) {
         try {
-            Optional<ParametrosGenerales> parGenUpdate = paramGenService.update(parGen, id);
-            if (parGenUpdate.isPresent()) {
-                ParametrosGeneralesDTO parGenDto = MapperUtils.DtoFromEntity(parGenUpdate.get(), ParametrosGeneralesDTO.class);
-                return new ResponseEntity<>(parGenDto, HttpStatus.OK);
+            Optional<ParametrosGeneralesDTO> parametroUpdated = paramGenService.update(paramGenModified, id);
+            if (parametroUpdated.isPresent()) {
+                return new ResponseEntity<>(parametroUpdated, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -128,14 +115,9 @@ public class ParametrosGeneralesController {
     @PreAuthorize("hasAuthority('USU04')")
     public @ResponseBody ResponseEntity<?> findAll() {
         try {
-            Optional<List<ParametrosGenerales>> result = paramGenService.findAll();
-            if (result.isPresent()) {
-                List<ParametrosGeneralesDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), ParametrosGeneralesDTO.class);
-                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(paramGenService.findAll(), HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -144,15 +126,9 @@ public class ParametrosGeneralesController {
     @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByEstado(@PathVariable(value = "estado") boolean estado) {
         try {
-            Optional<List<ParametrosGenerales>> result = paramGenService.findByEstado(estado);
-            if (result.isPresent()) {
-                List<ParametrosGeneralesDTO> permisoDTO = MapperUtils.DtoListFromEntityList(result.get(), ParametrosGeneralesDTO.class);
-                return new ResponseEntity<>(permisoDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(paramGenService.findByEstado(estado), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -161,13 +137,15 @@ public class ParametrosGeneralesController {
     @ApiOperation(value = "Crea un parametro general", response = HttpStatus.class, tags = "Parametros_Generales")
     @ResponseBody
     @PreAuthorize("hasAuthority('USU01')")
-    public ResponseEntity<?> create(@RequestBody ParametrosGenerales pg) {
-        try {
-            ParametrosGenerales pgCreated = paramGenService.create(pg);
-            PermisoDTO perDto = MapperUtils.DtoFromEntity(pgCreated, PermisoDTO.class);
-            return new ResponseEntity<>(perDto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> create(@RequestBody ParametrosGeneralesDTO parametrG, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                return new ResponseEntity(paramGenService.create(parametrG), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+        return new ResponseEntity(MENSAJE_VERIFICAR_INFORMACION, HttpStatus.BAD_REQUEST);
         }
     }
     
@@ -178,12 +156,9 @@ public class ParametrosGeneralesController {
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             paramGenService.delete(id);
-            if (findById(id).getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -193,12 +168,9 @@ public class ParametrosGeneralesController {
     public ResponseEntity<?> deleteAll() {
         try {
             paramGenService.deleteAll();
-            if (findAll().getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

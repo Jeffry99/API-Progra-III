@@ -62,5 +62,10 @@ public class TramiteRegistradoServiceImplementation implements ITramiteRegistrad
     public void deleteAll() {
         tramitesRegistradosRepository.deleteAll();
     }
+
+    @Override
+    public Optional<List<TramiteRegistrado>> findByCedulaCliente(String cedulaC) {
+        return Optional.ofNullable(tramitesRegistradosRepository.findByCedulaCliente(cedulaC));
+    }
     
 }

@@ -10,8 +10,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.una.tramites.dto.ParametrosGeneralesDTO;
 import org.una.tramites.entities.ParametrosGenerales;
 import org.una.tramites.repositories.IParametrosGeneralesRepository;
+import org.una.tramites.utils.MapperUtils;
+import org.una.tramites.utils.ServiceConvertionHelper;
 
 /**
  *
@@ -23,49 +26,60 @@ public class ParametrosGeneralesServiceImplementacion implements IParametrosGene
     @Autowired
     private IParametrosGeneralesRepository paramGenRepository;
     
+    
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<ParametrosGenerales>> findByEstado(boolean estado) {
-        return Optional.ofNullable(paramGenRepository.findByEstado(estado));
+    public Optional<ParametrosGeneralesDTO> findById(Long id) {
+        return ServiceConvertionHelper.oneToOptionalDto(paramGenRepository.findById(id), ParametrosGeneralesDTO.class);
     }
     
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<ParametrosGenerales>> findByNombre(String nombre) {
-        return Optional.ofNullable(paramGenRepository.findByNombreContainingIgnoreCase(nombre));
+    public Optional<List<ParametrosGeneralesDTO>> findAll() {
+        return ServiceConvertionHelper.findList(paramGenRepository.findAll(), ParametrosGeneralesDTO.class);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<List<ParametrosGeneralesDTO>> findByEstado(boolean estado) {
+        return ServiceConvertionHelper.findList(paramGenRepository.findByEstado(estado), ParametrosGeneralesDTO.class);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<List<ParametrosGeneralesDTO>> findByNombre(String nombre) {
+        return ServiceConvertionHelper.findList(paramGenRepository.findByNombreContainingIgnoreCase(nombre), ParametrosGeneralesDTO.class);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<ParametrosGenerales>> findByValor(String valor) {
-        return Optional.ofNullable(paramGenRepository.findByValorContainingIgnoreCase(valor));
+    public Optional<List<ParametrosGeneralesDTO>> findByValor(String valor) {
+        return ServiceConvertionHelper.findList(paramGenRepository.findByValorContainingIgnoreCase(valor), ParametrosGeneralesDTO.class);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<ParametrosGenerales>> findByDescripcion(String descripcion) {
-        return Optional.ofNullable(paramGenRepository.findByDescripcionContainingIgnoreCase(descripcion));
+    public Optional<List<ParametrosGeneralesDTO>> findByDescripcion(String descripcion) {
+        return ServiceConvertionHelper.findList(paramGenRepository.findByDescripcionContainingIgnoreCase(descripcion), ParametrosGeneralesDTO.class);
     }
 
     @Override
     @Transactional
-    public Optional<ParametrosGenerales> update(ParametrosGenerales pg, Long id) {
+    public Optional<ParametrosGeneralesDTO> update(ParametrosGeneralesDTO parametrosG, Long id) {
         if(paramGenRepository.findById(id).isPresent()){
-            return Optional.ofNullable(paramGenRepository.save(pg));
+            ParametrosGenerales parametr = MapperUtils.EntityFromDto(parametrosG, ParametrosGenerales.class);
+            parametr = paramGenRepository.save(parametr);
+            return Optional.ofNullable(MapperUtils.DtoFromEntity(parametr, ParametrosGeneralesDTO.class));
         }
         return null;
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<List<ParametrosGenerales>> findAll() {
-        return Optional.ofNullable(paramGenRepository.findAll());
-    }
-
-    @Override
     @Transactional
-    public ParametrosGenerales create(ParametrosGenerales pg) {
-        return paramGenRepository.save(pg);
+    public ParametrosGeneralesDTO create(ParametrosGeneralesDTO parametrosG) { 
+        ParametrosGenerales paramet = MapperUtils.EntityFromDto(parametrosG, ParametrosGenerales.class);
+        paramet = paramGenRepository.save(paramet);
+        return MapperUtils.DtoFromEntity(paramet, ParametrosGeneralesDTO.class);
     }
     
     @Override
@@ -80,11 +94,7 @@ public class ParametrosGeneralesServiceImplementacion implements IParametrosGene
         paramGenRepository.deleteAll();
     }
     
-    @Override
-    @Transactional(readOnly = true)
-    public Optional<ParametrosGenerales> findById(Long id) {
-        return paramGenRepository.findById(id);
-    }
+
     
 }
 

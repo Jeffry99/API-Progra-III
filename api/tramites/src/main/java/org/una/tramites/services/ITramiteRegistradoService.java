@@ -8,6 +8,7 @@ package org.una.tramites.services;
 import java.util.List;
 import java.util.Optional;
 import org.una.tramites.dto.TramiteRegistradoDTO;
+import org.una.tramites.entities.TramiteRegistrado;
  
 
 /**
@@ -27,5 +28,7 @@ public interface ITramiteRegistradoService {
     public void delete(Long id);
 
     public void deleteAll();
+    
+    public Optional<List<TramiteRegistrado>> findByCedulaCliente(String cedula);
     
 }

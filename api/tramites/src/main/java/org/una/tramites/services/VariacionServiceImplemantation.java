@@ -10,8 +10,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.una.tramites.dto.VariacionDTO;
 import org.una.tramites.entities.Variacion;
 import org.una.tramites.repositories.IVariacionRepository;
+import org.una.tramites.utils.MapperUtils;
+import org.una.tramites.utils.ServiceConvertionHelper;
 
 /**
  *
@@ -25,33 +28,38 @@ public class VariacionServiceImplemantation implements IVariacionService{
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<Variacion>> findAll() {
-        return Optional.ofNullable(varRepository.findAll());
+    public Optional<List<VariacionDTO>> findAll() {
+        return ServiceConvertionHelper.findList(varRepository.findAll(), VariacionDTO.class);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Variacion> findById(Long id) {
-        return varRepository.findById(id);
+    public Optional<VariacionDTO> findById(Long id) {
+        return ServiceConvertionHelper.oneToOptionalDto(varRepository.findById(id), VariacionDTO.class);
     }
     
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<Variacion>> findByTramitesTipos(Long id) {
-        return Optional.ofNullable(varRepository.findByTramitesTipos(id));
+    public Optional<List<VariacionDTO>> findByTramitesTipos(Long id) {
+        return ServiceConvertionHelper.findList(varRepository.findByTramitesTipos(id), VariacionDTO.class);
     }
 
     @Override
     @Transactional
-    public Variacion create(Variacion variacion) {
-        return varRepository.save(variacion);
+    public VariacionDTO create(VariacionDTO variacion) {
+        Variacion variac = MapperUtils.EntityFromDto(variacion, Variacion.class);
+        variac = varRepository.save(variac);
+        return MapperUtils.DtoFromEntity(variac, VariacionDTO.class);
     }
 
     @Override
     @Transactional
-    public Optional<Variacion> update(Variacion variacion, Long id) {
-        if(varRepository.findById(id).isPresent())
-            return Optional.ofNullable(varRepository.save(variacion));
+    public Optional<VariacionDTO> update(VariacionDTO variacion, Long id) {
+        if(varRepository.findById(id).isPresent()){
+            Variacion variac = MapperUtils.EntityFromDto(variacion, Variacion.class);
+            variac = varRepository.save(variac);
+            return Optional.ofNullable(MapperUtils.DtoFromEntity(variac, VariacionDTO.class));
+        }
         return null;
     }
 
@@ -69,8 +77,8 @@ public class VariacionServiceImplemantation implements IVariacionService{
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<Variacion>> findByGrupo(String grupo) {
-        return Optional.ofNullable(varRepository.findByGrupo(grupo));
+    public Optional<List<VariacionDTO>> findByGrupo(String grupo) {
+         return ServiceConvertionHelper.findList(varRepository.findByGrupo(grupo), VariacionDTO.class);
     }
 
     @Override

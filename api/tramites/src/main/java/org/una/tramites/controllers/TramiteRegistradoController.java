@@ -128,6 +128,22 @@ public class TramiteRegistradoController {
             return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    
+    @GetMapping("/cedula/{cedula}")
+    @ApiOperation(value = "Obtiene una lista de los clientes por medio de su cedula", response = TramiteRegistradoDTO.class, responseContainer = "List", tags = "Tramites_Registrados")
+    @PreAuthorize("hasAuthority('TRA05')")
+    public ResponseEntity<?> findByCedulaCliente(@PathVariable(value = "cedula")String cedulaC){
+        try{
+            Optional<List<TramiteRegistrado>> result = tramitesRegistradosService.findByCedulaCliente(cedulaC);
+            if(result.isPresent()){
+                List<TramiteRegistradoDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), TramiteRegistradoDTO.class);
+                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch(Exception ex){
+            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
 

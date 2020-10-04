@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,20 +40,16 @@ public class VariacionController {
 
     @Autowired
     private VariacionServiceImplemantation varService;
-    
+    final String MENSAJE_VERIFICAR_INFORMACION = "Debe verifiar el formato y la información de su solicitud con el formato esperado";
+
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos las Variaciones", response = VariacionDTO.class, responseContainer = "List", tags = "Variaciones")
     @PreAuthorize("hasAuthority('TRA06')")
     public @ResponseBody ResponseEntity<?> findAll(){
-        try{
-            Optional<List<Variacion>> result = varService.findAll();
-            if(result.isPresent()){
-                List<VariacionDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), VariacionDTO.class);
-                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch(Exception ex){
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            return new ResponseEntity<>(varService.findAll(), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -60,14 +57,9 @@ public class VariacionController {
     @ApiOperation(value = "Obtiene una lista de variaciones por su tramite", response = VariacionDTO.class, responseContainer = "List", tags = "Variaciones")
    @PreAuthorize("hasAuthority('TRA05')")
     public @ResponseBody ResponseEntity<?> findByTramiteTipo(@PathVariable(value = "id") Long id){
-        try{
-            Optional<List<Variacion>> result = varService.findByTramitesTipos(id);
-            if(result.isPresent()){
-                List<VariacionDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), VariacionDTO.class);
-                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch(Exception ex){
+        try {
+            return new ResponseEntity<>(varService.findByTramitesTipos(id), HttpStatus.OK);
+        } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -77,14 +69,7 @@ public class VariacionController {
     @PreAuthorize("hasAuthority('TRA05')")    
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
-
-            Optional<Variacion> variacionFound = varService.findById(id);
-            if (variacionFound.isPresent()) {
-                VariacionDTO variacionDto = MapperUtils.DtoFromEntity(variacionFound.get(), VariacionDTO.class);
-                return new ResponseEntity<>(variacionDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(varService.findById(id), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -95,13 +80,15 @@ public class VariacionController {
     @ApiOperation(value = "Crea una variacion", response = HttpStatus.class, tags = "Variaciones")
     @ResponseBody
    @PreAuthorize("hasAuthority('TRD01')")
-    public ResponseEntity<?> create(@RequestBody Variacion variacion) {
-        try {
-            Variacion varCreated = varService.create(variacion);
-            VariacionDTO varDto = MapperUtils.DtoFromEntity(varCreated, VariacionDTO.class);
-            return new ResponseEntity<>(varDto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> create(@RequestBody VariacionDTO variacion, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                return new ResponseEntity(varService.create(variacion), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+        return new ResponseEntity(MENSAJE_VERIFICAR_INFORMACION, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -109,14 +96,14 @@ public class VariacionController {
     @ApiOperation(value = "Modifica una variacion", response = HttpStatus.class, tags = "Variaciones")
     @ResponseBody
     @PreAuthorize("hasAuthority('TRD02')")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Variacion varModified) {
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody VariacionDTO varModified) {
         try {
-            Optional<Variacion> varUpdated = varService.update(varModified, id);
-            if (varUpdated.isPresent()) {
-                VariacionDTO usuarioDto = MapperUtils.DtoFromEntity(varUpdated.get(), VariacionDTO.class);
-                return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
+            Optional<VariacionDTO> perUpdated = varService.update(varModified, id);
+            if (perUpdated.isPresent()) {
+                return new ResponseEntity<>(perUpdated, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -128,12 +115,9 @@ public class VariacionController {
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             varService.delete(id);
-            if (findById(id).getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -143,12 +127,9 @@ public class VariacionController {
     public ResponseEntity<?> deleteAll() {
         try {
             varService.deleteAll();
-            if (findAll().getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -156,15 +137,10 @@ public class VariacionController {
     @ApiOperation(value = "Obtiene una lista de las variaciones por medio de su grupo", response = VariacionDTO.class, responseContainer = "List", tags = "Variaciones")
     @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findByCodigo(@PathVariable(value = "grupo")String codigo){
-        try{
-            Optional<List<Variacion>> result = varService.findByGrupo(codigo);
-            if(result.isPresent()){
-                List<VariacionDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), VariacionDTO.class);
-                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch(Exception ex){
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            return new ResponseEntity<>(varService.findByGrupo(codigo), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
