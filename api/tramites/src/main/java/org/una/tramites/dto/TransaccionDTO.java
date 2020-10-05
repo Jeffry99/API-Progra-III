@@ -19,8 +19,8 @@ import org.una.tramites.entities.PermisoOtorgado;
 public class TransaccionDTO {
     private Long id;
     @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-    Date fechaRegistro;
-    PermisoOtorgado permisoOtorgado;
-    String objeto;
-    String información;
+    private Date fechaRegistro;
+    private PermisoOtorgadoDTO permisoOtorgado;
+    private String objeto;
+    private String información;
 }

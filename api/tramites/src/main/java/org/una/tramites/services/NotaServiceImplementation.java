@@ -76,8 +76,8 @@ public class NotaServiceImplementation implements INotaService{
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public Optional<Nota> findByTitulo(String titulo) {
-        return Optional.ofNullable(notasRepository.findByTitulo(titulo));
+    public Optional<List<Nota>> findByTitulo(String titulo) {
+        return Optional.ofNullable(notasRepository.findByTitulo(titulo)) ;
     }
+  
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,7 @@ public class TransaccionController {
     
     @Autowired
     private ITransaccionService transaccionService;
+    final String MENSAJE_VERIFICAR_INFORMACION = "Debe verifiar el formato y la información de su solicitud con el formato esperado";
 
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todas las transacciones", response = TransaccionDTO.class, responseContainer = "List", tags = "Transacciones")
@@ -44,15 +46,9 @@ public class TransaccionController {
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
-            Optional<List<Transaccion>> result = transaccionService.findAll();
-            if (result.isPresent()) {
-                List<TransaccionDTO> transaccionDTO = MapperUtils.DtoListFromEntityList(result.get(), TransaccionDTO.class);
-                return new ResponseEntity<>(transaccionDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(transaccionService.findAll(), HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -61,13 +57,7 @@ public class TransaccionController {
     @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
-            Optional<Transaccion> transaccionFound = transaccionService.findById(id);
-            if (transaccionFound.isPresent()) {
-                TransaccionDTO tranDto = MapperUtils.DtoFromEntity(transaccionFound.get(), TransaccionDTO.class);
-                return new ResponseEntity<>(tranDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(transaccionService.findById(id), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -78,26 +68,27 @@ public class TransaccionController {
     @ApiOperation(value = "Crea una transaccion", response = HttpStatus.class, tags = "Transacciones")
     @ResponseBody
     @PreAuthorize("hasAuthority('TRA01')")
-    public ResponseEntity<?> create(@RequestBody Transaccion tran) {
-        try {
-            Transaccion tranCreated = transaccionService.create(tran);
-            TransaccionDTO tranDto = MapperUtils.DtoFromEntity(tranCreated, TransaccionDTO.class);
-            return new ResponseEntity<>(tranDto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> create(@RequestBody TransaccionDTO tran, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                return new ResponseEntity(transaccionService.create(tran), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+        return new ResponseEntity(MENSAJE_VERIFICAR_INFORMACION, HttpStatus.BAD_REQUEST);
         }
-    }
+    }   
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Modifica una transaccion", response = HttpStatus.class, tags = "Transacciones")
     @ResponseBody
     @PreAuthorize("hasAuthority('TRA02')")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Transaccion tranModified) {
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody TransaccionDTO tranModified) {
         try {
-            Optional<Transaccion> tranUpdated = transaccionService.update(tranModified, id);
-            if (tranUpdated.isPresent()) {
-                TransaccionDTO tranDto = MapperUtils.DtoFromEntity(tranUpdated.get(), TransaccionDTO.class);
-                return new ResponseEntity<>(tranDto, HttpStatus.OK);
+            Optional<TransaccionDTO> perUpdated = transaccionService.update(tranModified, id);
+            if (perUpdated.isPresent()) {
+                return new ResponseEntity<>(perUpdated, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -110,14 +101,11 @@ public class TransaccionController {
     @ApiOperation(value = "Elimina una transaccion", response = HttpStatus.class, tags = "Transacciones")
     @PreAuthorize("hasAuthority('TRA03')")
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
-        try {
+         try {
             transaccionService.delete(id);
-            if (findById(id).getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -127,12 +115,9 @@ public class TransaccionController {
     public ResponseEntity<?> deleteAll() {
         try {
             transaccionService.deleteAll();
-            if (findAll().getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

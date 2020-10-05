@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,19 +39,14 @@ import org.una.tramites.utils.MapperUtils;
 public class RequisitoPresentadoController {
     @Autowired
     IRequisitoPresentadoService requisitoPresentadoService;
-    
+    final String MENSAJE_VERIFICAR_INFORMACION = "Debe verifiar el formato y la información de su solicitud con el formato esperado";
+
     @GetMapping("/{id}")
     @ApiOperation(value = "Obtiene un requisito presentado a traves de su identificador unico", response = RequisitoPresentadoDTO.class, tags = "Requisitos_Presentados")
     @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
-            Optional<RequisitoPresentado> repPresentadoFound = requisitoPresentadoService.findById(id);
-            if (repPresentadoFound.isPresent()) {
-                RequisitoPresentadoDTO reqPresentadoDto = MapperUtils.DtoFromEntity(repPresentadoFound.get(), RequisitoPresentadoDTO.class);
-                return new ResponseEntity<>(reqPresentadoDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(requisitoPresentadoService.findById(id), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -62,15 +58,9 @@ public class RequisitoPresentadoController {
     public @ResponseBody
     ResponseEntity<?> findAll() {
         try {
-            Optional<List<RequisitoPresentado>> result = requisitoPresentadoService.findAll();
-            if (result.isPresent()) {
-                List<RequisitoPresentadoDTO> requisitoPresentadoDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitoPresentadoDTO.class);
-                return new ResponseEntity<>(requisitoPresentadoDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(requisitoPresentadoService.findAll(), HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -78,15 +68,10 @@ public class RequisitoPresentadoController {
     @ApiOperation(value = "Obtiene los requisitos presentados del tramite registrado", response = RequisitoPresentadoDTO.class, responseContainer = "List", tags = "Requisitos_Presentados")
     @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByTramiteRegistrado(@PathVariable(value = "id")Long  id) {
-        try{
-            Optional<List<RequisitoPresentado>> result = requisitoPresentadoService.findByTramiteRegistrado(id);
-            if(result.isPresent()){
-                List<RequisitoPresentadoDTO> resultDto = MapperUtils.DtoListFromEntityList(result.get(), RequisitoPresentadoDTO.class);
-                return new ResponseEntity<>(resultDto, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch(Exception ex){
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            return new ResponseEntity<>(requisitoPresentadoService.findByTramiteRegistrado(id), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     
@@ -95,13 +80,15 @@ public class RequisitoPresentadoController {
     @ApiOperation(value = "Crea un requisito presentado", response = HttpStatus.class, tags = "Requisitos_Presentados")
     @ResponseBody
     @PreAuthorize("hasAuthority('USU01')")
-    public ResponseEntity<?> create(@RequestBody RequisitoPresentado reqPresentado) {
-        try {
-            RequisitoPresentado reqPresentadoCreated = requisitoPresentadoService.create(reqPresentado);
-            RequisitoPresentadoDTO reqPresentadoDto = MapperUtils.DtoFromEntity(reqPresentadoCreated, RequisitoPresentadoDTO.class);
-            return new ResponseEntity<>(reqPresentadoDto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> create(@RequestBody RequisitoPresentadoDTO reqPresentado, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                return new ResponseEntity(requisitoPresentadoService.create(reqPresentado), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+        return new ResponseEntity(MENSAJE_VERIFICAR_INFORMACION, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -109,12 +96,11 @@ public class RequisitoPresentadoController {
     @ApiOperation(value = "Modifica un requisito presentado", response = HttpStatus.class, tags = "Requisitos_Presentados")
     @ResponseBody
     @PreAuthorize("hasAuthority('USU02')")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody RequisitoPresentado reqPresentadoModified) {
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody RequisitoPresentadoDTO reqPresentadoModified) {
         try {
-            Optional<RequisitoPresentado> reqPresentadoUpdated = requisitoPresentadoService.update(reqPresentadoModified, id);
-            if (reqPresentadoUpdated.isPresent()) {
-                RequisitoPresentadoDTO reqPresentadoDto = MapperUtils.DtoFromEntity(reqPresentadoUpdated.get(), RequisitoPresentadoDTO.class);
-                return new ResponseEntity<>(reqPresentadoDto, HttpStatus.OK);
+            Optional<RequisitoPresentadoDTO> perUpdated = requisitoPresentadoService.update(reqPresentadoModified, id);
+            if (perUpdated.isPresent()) {
+                return new ResponseEntity<>(perUpdated, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -129,12 +115,9 @@ public class RequisitoPresentadoController {
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             requisitoPresentadoService.delete(id);
-            if (findById(id).getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -144,12 +127,9 @@ public class RequisitoPresentadoController {
     public ResponseEntity<?> deleteAll() {
         try {
             requisitoPresentadoService.deleteAll();
-            if (findAll().getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     

@@ -9,8 +9,11 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.una.tramites.dto.RequisitoDTO;
 import org.una.tramites.entities.Requisito;
 import org.una.tramites.repositories.IRequisitoRepository;
+import org.una.tramites.utils.MapperUtils;
+import org.una.tramites.utils.ServiceConvertionHelper;
 
 /**
  *
@@ -23,29 +26,33 @@ public class RequisitoServiceImplementation implements IRequisitoService{
     private IRequisitoRepository reqRepo;
     
     @Override
-    public Optional<List<Requisito>> findAll() {
-        return Optional.ofNullable(reqRepo.findAll());
+    public Optional<List<RequisitoDTO>> findAll() {
+        return ServiceConvertionHelper.findList(reqRepo.findAll(), RequisitoDTO.class);
     }
 
     @Override
-    public Optional<Requisito> findById(Long id) {
-        return reqRepo.findById(id);
+    public Optional<RequisitoDTO> findById(Long id) {
+        return ServiceConvertionHelper.oneToOptionalDto(reqRepo.findById(id), RequisitoDTO.class);
     }
     
     @Override
-    public Optional<List<Requisito>> findByVariaciones(Long variacionId){
-        return Optional.ofNullable(reqRepo.findByVariaciones(variacionId));
+    public Optional<List<RequisitoDTO>> findByVariaciones(Long variacionId){
+        return ServiceConvertionHelper.findList(reqRepo.findByVariaciones(variacionId), RequisitoDTO.class);
     }
 
     @Override
-    public Requisito create(Requisito requisito) {
-        return reqRepo.save(requisito);
+    public RequisitoDTO create(RequisitoDTO requisito) {
+       Requisito requis = MapperUtils.EntityFromDto(requisito, Requisito.class);
+        requis = reqRepo.save(requis);
+        return MapperUtils.DtoFromEntity(requis, RequisitoDTO.class);
     }
 
     @Override
-    public Optional<Requisito> update(Requisito requisito, Long id) {
+    public Optional<RequisitoDTO> update(RequisitoDTO requisito, Long id) {
         if(reqRepo.findById(id).isPresent()){
-            return Optional.ofNullable(reqRepo.save(requisito));
+            Requisito requis = MapperUtils.EntityFromDto(requisito, Requisito.class);
+            requis = reqRepo.save(requis);
+            return Optional.ofNullable(MapperUtils.DtoFromEntity(requis, RequisitoDTO.class));
         }
         return null;
     }
@@ -61,9 +68,8 @@ public class RequisitoServiceImplementation implements IRequisitoService{
     }
 
     @Override
-    public Optional<List<Requisito>> findByDescripcion(String descripcion) {
-        return Optional.ofNullable(reqRepo.findByDescripcion(descripcion));
+    public Optional<List<RequisitoDTO>> findByDescripcion(String descripcion) {
+        return ServiceConvertionHelper.findList(reqRepo.findByDescripcion(descripcion), RequisitoDTO.class);
     }
-
 }
 

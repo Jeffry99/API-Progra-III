@@ -16,7 +16,7 @@ import org.una.tramites.entities.Nota;
  * @author Pablo-VE
  */
 public interface INotaRepository extends JpaRepository<Nota, Long> {
-    public Nota findByTitulo(String titulo);
+    public List<Nota> findByTitulo(String titulo);
     
     @Query("SELECT n FROM Nota n LEFT JOIN n.tramitesRegistrados t WHERE t.id = :tramiteID")
     public List<Nota> findByTramitesRegistrados(@Param("tramiteID")long tramitesRegistrados);

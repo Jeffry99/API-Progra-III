@@ -30,5 +30,5 @@ public interface INotaService {
 
     public void deleteAll();
     
-    public Optional<Nota> findByTitulo(String grupo);
+    public Optional<List<Nota>> findByTitulo(String titulo);
 }

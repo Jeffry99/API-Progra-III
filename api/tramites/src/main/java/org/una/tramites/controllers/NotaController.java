@@ -74,8 +74,8 @@ public class NotaController {
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
             return new ResponseEntity<>(notasService.findById(id), HttpStatus.OK);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -137,19 +137,18 @@ public class NotaController {
         }
     }
 
-    @GetMapping("/{titulo}")
+    @GetMapping("/titulo/{titulo}")
     @ApiOperation(value = "Obtiene una nota a traves de su titulo", response = NotaDTO.class, tags = "Notas")
     @PreAuthorize("hasAuthority('USU04')")
     public ResponseEntity<?> findByTitulo(@PathVariable(value = "titulo") String titulo) {
-        try {
-            Optional<Nota> notasFound = notasService.findByTitulo(titulo);
-            if (notasFound.isPresent()) {
-                NotaDTO notasDto = MapperUtils.DtoFromEntity(notasFound.get(), NotaDTO.class);
-                return new ResponseEntity<>(notasDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        try{
+            Optional<List<Nota>> result = notasService.findByTitulo(titulo);
+            if(result.isPresent()){
+                List<NotaDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), NotaDTO.class);
+                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
             }
-        } catch (Exception ex) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }catch(Exception ex){
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -10,8 +10,11 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.una.tramites.dto.RequisitoPresentadoDTO;
 import org.una.tramites.entities.RequisitoPresentado;
 import org.una.tramites.repositories.IRequisitoPresentadoRepository;
+import org.una.tramites.utils.MapperUtils;
+import org.una.tramites.utils.ServiceConvertionHelper;
 
 /**
  *
@@ -25,35 +28,37 @@ public class RequisitoPresentadoServiceImplementation implements IRequisitoPrese
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<RequisitoPresentado> findById(Long id) {
-        return requisitoPresentadoRepository.findById(id);
+    public Optional<RequisitoPresentadoDTO> findById(Long id) {
+        return ServiceConvertionHelper.oneToOptionalDto(requisitoPresentadoRepository.findById(id), RequisitoPresentadoDTO.class);
     }
-
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<RequisitoPresentado>> findAll() {
-        return Optional.ofNullable(requisitoPresentadoRepository.findAll()) ;
+    public Optional<List<RequisitoPresentadoDTO>> findAll() {
+        return ServiceConvertionHelper.findList(requisitoPresentadoRepository.findAll(), RequisitoPresentadoDTO.class);
     }
-
     @Override
     @Transactional(readOnly = true)
-    public Optional<List<RequisitoPresentado>> findByTramiteRegistrado(Long id) {
-        return Optional.of(requisitoPresentadoRepository.findByTramitesRegistrados(id));
+    public Optional<List<RequisitoPresentadoDTO>> findByTramiteRegistrado(Long id) {
+        return ServiceConvertionHelper.findList(requisitoPresentadoRepository.findByTramitesRegistrados(id), RequisitoPresentadoDTO.class);
     }
 
     @Override
     @Transactional
-    public RequisitoPresentado create(RequisitoPresentado requisitoPresentado) {
-        return requisitoPresentadoRepository.save(requisitoPresentado);
+    public RequisitoPresentadoDTO create(RequisitoPresentadoDTO requisitoPresentado) {
+        RequisitoPresentado requisito = MapperUtils.EntityFromDto(requisitoPresentado, RequisitoPresentado.class);
+        requisito = requisitoPresentadoRepository.save(requisito);
+        return MapperUtils.DtoFromEntity(requisito, RequisitoPresentadoDTO.class);
     }
 
     @Override
     @Transactional
-    public Optional<RequisitoPresentado> update(RequisitoPresentado requisitoPresentado, Long id) {
-        if(requisitoPresentadoRepository.findById(id).isPresent())
-            return Optional.ofNullable(requisitoPresentadoRepository.save(requisitoPresentado));
-        else
-            return null;
+    public Optional<RequisitoPresentadoDTO> update(RequisitoPresentadoDTO requisitoPresentado, Long id) {
+        if(requisitoPresentadoRepository.findById(id).isPresent()){
+            RequisitoPresentado requisito = MapperUtils.EntityFromDto(requisitoPresentado, RequisitoPresentado.class);
+            requisito = requisitoPresentadoRepository.save(requisito);
+            return Optional.ofNullable(MapperUtils.DtoFromEntity(requisito, RequisitoPresentadoDTO.class));
+        }
+        return null;
     }
 
     @Override

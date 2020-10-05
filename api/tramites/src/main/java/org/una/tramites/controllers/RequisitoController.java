@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,20 +40,16 @@ public class RequisitoController {
 
     @Autowired
     private IRequisitoService reqService;
- 
+    final String MENSAJE_VERIFICAR_INFORMACION = "Debe verifiar el formato y la información de su solicitud con el formato esperado";
+
     @GetMapping()
     @ApiOperation(value = "Obtiene una lista de todos los Requisitos", response = RequisitoDTO.class, responseContainer = "List", tags = "Requisitos")
     @PreAuthorize("hasAuthority('TRA06')")
     public @ResponseBody ResponseEntity<?> findAll(){
-        try{
-            Optional<List<Requisito>> result = reqService.findAll();
-            if(result.isPresent()){
-                List<RequisitoDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitoDTO.class);
-                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch(Exception ex){
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            return new ResponseEntity<>(reqService.findAll(), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -61,14 +58,7 @@ public class RequisitoController {
     @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findById(@PathVariable(value = "id") Long id) {
         try {
-
-            Optional<Requisito> variacionFound = reqService.findById(id);
-            if (variacionFound.isPresent()) {
-                RequisitoDTO variacionDto = MapperUtils.DtoFromEntity(variacionFound.get(), RequisitoDTO.class);
-                return new ResponseEntity<>(variacionDto, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(reqService.findById(id), HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -79,16 +69,9 @@ public class RequisitoController {
     @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findByVariacionId(@PathVariable(value = "id") Long id) {
         try {
-
-            Optional<List<Requisito>> result = reqService.findByVariaciones(id);
-            if(result.isPresent()){
-                List<RequisitoDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitoDTO.class);
-                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
+            return new ResponseEntity<>(reqService.findByVariaciones(id), HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -97,13 +80,15 @@ public class RequisitoController {
     @ApiOperation(value = "Crea un requisito", response = HttpStatus.class, tags = "Requisitos")
     @ResponseBody
     @PreAuthorize("hasAuthority('TRA01')")
-    public ResponseEntity<?> create(@RequestBody Requisito variacion) {
-        try {
-            Requisito varCreated = reqService.create(variacion);
-            RequisitoDTO varDto = MapperUtils.DtoFromEntity(varCreated, RequisitoDTO.class);
-            return new ResponseEntity<>(varDto, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<?> create(@RequestBody RequisitoDTO variacion, BindingResult bindingResult) {
+        if (!bindingResult.hasErrors()) {
+            try {
+                return new ResponseEntity(reqService.create(variacion), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+        return new ResponseEntity(MENSAJE_VERIFICAR_INFORMACION, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -111,14 +96,14 @@ public class RequisitoController {
     @ApiOperation(value = "Modifica un requisito", response = HttpStatus.class, tags = "Requisitos")
     @ResponseBody
     @PreAuthorize("hasAuthority('TRA02')")
-    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody Requisito varModified) {
+    public ResponseEntity<?> update(@PathVariable(value = "id") Long id, @RequestBody RequisitoDTO varModified) {
         try {
-            Optional<Requisito> varUpdated = reqService.update(varModified, id);
-            if (varUpdated.isPresent()) {
-                RequisitoDTO usuarioDto = MapperUtils.DtoFromEntity(varUpdated.get(), RequisitoDTO.class);
-                return new ResponseEntity<>(usuarioDto, HttpStatus.OK);
+            Optional<RequisitoDTO> requiUpdated = reqService.update(varModified, id);
+            if (requiUpdated.isPresent()) {
+                return new ResponseEntity<>(requiUpdated, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -130,12 +115,9 @@ public class RequisitoController {
     public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) {
         try {
             reqService.delete(id);
-            if (findById(id).getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -145,12 +127,9 @@ public class RequisitoController {
     public ResponseEntity<?> deleteAll() {
         try {
             reqService.deleteAll();
-            if (findAll().getStatusCode() == HttpStatus.NO_CONTENT) {
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -158,15 +137,10 @@ public class RequisitoController {
     @ApiOperation(value = "Obtiene una lista de requisitos por su descripcion", response = RequisitoDTO.class, responseContainer = "List", tags = "Requisitos")
     @PreAuthorize("hasAuthority('TRA05')")
     public ResponseEntity<?> findByDescripcion(@PathVariable(value = "descripcion")String descripcion){
-        try{
-            Optional<List<Requisito>> result = reqService.findByDescripcion(descripcion);
-            if(result.isPresent()){
-                List<RequisitoDTO> resultDTO = MapperUtils.DtoListFromEntityList(result.get(), RequisitoDTO.class);
-                return new ResponseEntity<>(resultDTO, HttpStatus.OK);
-            }
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }catch(Exception ex){
-            return new ResponseEntity<>(ex, HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            return new ResponseEntity<>(reqService.findByDescripcion(descripcion), HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity<>(ex.getClass(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
