@@ -15,9 +15,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.una.tramites.dto.AuthenticationRequest;
 import org.una.tramites.dto.AuthenticationResponse;
+import org.una.tramites.dto.PermisoOtorgadoDTO;
 import org.una.tramites.dto.UsuarioDTO;
 import org.una.tramites.entities.Usuario;
 import org.una.tramites.jwt.JwtProvider;
+import org.una.tramites.repositories.IPermisoOtorgadoRepository;
 import org.una.tramites.repositories.IUsuarioRepository;
 import org.una.tramites.utils.MapperUtils;
 
@@ -36,6 +38,9 @@ public class AutenticacionServiceImplementation implements IAutenticacionService
     @Autowired
     private IUsuarioRepository usuarioRepository;
     
+    @Autowired
+    private IPermisoOtorgadoRepository permisoOtorgadoRepository;
+    
 
     @Override
     @Transactional(readOnly = true)
@@ -50,6 +55,7 @@ public class AutenticacionServiceImplementation implements IAutenticacionService
             authenticationResponse.setJwt(jwtProvider.generateToken(authenticationRequest));
             UsuarioDTO usuarioDto = MapperUtils.DtoFromEntity(usuario.get(), UsuarioDTO.class);
             authenticationResponse.setUsuario(usuarioDto);
+            authenticationResponse.setPermisos(MapperUtils.DtoListFromEntityList(permisoOtorgadoRepository.findByUsuario(usuarioDto.getId()), PermisoOtorgadoDTO.class));
 
             return authenticationResponse;
         } else {

@@ -18,7 +18,8 @@ public interface IPermisoOtorgadoRepository extends JpaRepository<PermisoOtorgad
     @Query("SELECT p FROM PermisoOtorgado p LEFT JOIN p.usuario u LEFT JOIN p.permiso j WHERE u.id = :usuarioID AND j.id = :permisoID")
     public PermisoOtorgado findByUsuarioIdAndPermisoId(@Param("usuarioID") Long usuario, @Param("permisoID")Long permiso);
     
-    public List<PermisoOtorgado> findByUsuario(Long usuarioId);
+    @Query("SELECT p FROM PermisoOtorgado p LEFT JOIN p.usuario u WHERE u.id = :usuarioID")
+    public List<PermisoOtorgado> findByUsuario(@Param("usuarioID") Long usuarioId);
     
     public List<PermisoOtorgado> findByPermiso(Long permisoId);
     
