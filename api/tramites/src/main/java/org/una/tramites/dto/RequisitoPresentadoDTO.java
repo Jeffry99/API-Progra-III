@@ -5,7 +5,7 @@
  */
 package org.una.tramites.dto;
 
-import java.sql.Date;
+
 import javax.json.bind.annotation.JsonbDateFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +25,7 @@ import org.una.tramites.entities.TramiteRegistrado;
 public class RequisitoPresentadoDTO {
     private Long id;
     @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-    private Date fechaRegistro;
+    private java.util.Date fechaRegistro;
     private TramiteRegistradoDTO tramitesRegistrados;
     private RequisitoDTO requisito;
 }
