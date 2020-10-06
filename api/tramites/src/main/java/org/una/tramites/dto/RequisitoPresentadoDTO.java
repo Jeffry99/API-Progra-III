@@ -26,6 +26,6 @@ public class RequisitoPresentadoDTO {
     private Long id;
     @JsonbDateFormat(value = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date fechaRegistro;
-    private TramiteRegistrado tramiteRegistradoId;
-    private RequisitoDTO requisitoId;
+    private TramiteRegistradoDTO tramitesRegistrados;
+    private RequisitoDTO requisito;
 }
